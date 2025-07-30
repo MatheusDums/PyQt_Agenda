@@ -281,7 +281,28 @@ class Ui_MainWindow(object):
             
     def editar(self) :
         print('teste')    
-            
+        url = 'http://localhost/pyqt_agenda/php/api/edita.php'
+        linha = self.tabela.currentRow()
+        
+        if linha >= 0 :
+            item_id = self.tabela.item(linha, 1)
+            item_nome = self.tabela.item(linha, 0)
+            item_telefone = self.tabela.item(linha, 2)
+            item_email = self.tabela.item(linha, 3)
+            item_nasc = self.tabela.item(linha, 4)
+            item_obs = self.tabela.item(linha, 5)
+            text_nome = item_nome.text()
+            text_telefone = item_telefone.text()
+            text_email = item_email.text()
+            text_nasc = item_nasc.text()
+            text_observacoes = item_obs.text()           
+        self.linha_nome.setText(text_nome)
+        self.linha_telefone.setText(text_telefone)
+        self.linha_email.setText(text_email)
+        self.data_nasc.date().toString(text_nasc)
+        self.linha_obs.setText(text_observacoes)
+        print(text_nasc)
+        
             
         
         
