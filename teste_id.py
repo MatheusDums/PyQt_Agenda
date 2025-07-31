@@ -167,8 +167,6 @@ class Ui_MainWindow(object):
         self.editar_btn.clicked.connect(self.editar)
         
         
-        
-        
 
     def padrao(self) :
         self.linha_nome.setText("")
@@ -176,6 +174,7 @@ class Ui_MainWindow(object):
         self.linha_email.setText("")
         self.data_nasc.setDate(QDate(2000, 1, 1))
         self.linha_obs.setText("")
+        self.salvar_btn.setText("Salvar")
         
     def listar(self) :
         url = 'http://localhost/pyqt_agenda/php/api/listar.php'
@@ -229,28 +228,29 @@ class Ui_MainWindow(object):
             reply.setStandardButtons(QMessageBox.StandardButton.Yes)
             x = reply.exec()
         else:
-            resposta = requests.post(url, json=data)
-            print(resposta.text)
-            self.padrao()
-            status_code = resposta.status_code
-            if status_code == 200 :
-                reply = QMessageBox()
-                reply.setWindowTitle("Agenda de Contatos")
-                reply.setWindowIcon(QIcon('assets/images/image.png'))
-                reply.setText("Contato adicionado com sucesso")
-                reply.setStandardButtons(QMessageBox.StandardButton.Yes)
-                x = reply.exec()
-            else:
-                reply = QMessageBox()
-                reply.setWindowTitle("Agenda de Contatos")
-                reply.setWindowIcon(QIcon('assets/images/image.png'))
-                reply.setText("Erro ao adicionar contato")
-                reply.setStandardButtons(QMessageBox.StandardButton.Yes)
-                x = reply.exec()
+            if self.salvar_btn.text() == "Salvar" :
+                resposta = requests.post(url, json=data)
+                print(resposta.text)
+                self.padrao()
+                status_code = resposta.status_code
+                if status_code == 200 :
+                    reply = QMessageBox()
+                    reply.setWindowTitle("Agenda de Contatos")
+                    reply.setWindowIcon(QIcon('assets/images/image.png'))
+                    reply.setText("Contato adicionado com sucesso")
+                    reply.setStandardButtons(QMessageBox.StandardButton.Yes)
+                    x = reply.exec()
+                else:
+                    reply = QMessageBox()
+                    reply.setWindowTitle("Agenda de Contatos")
+                    reply.setWindowIcon(QIcon('assets/images/image.png'))
+                    reply.setText("Erro ao adicionar contato")
+                    reply.setStandardButtons(QMessageBox.StandardButton.Yes)
+                    x = reply.exec()
 
 
-            """ agora tem que puxar os dados do banco, e apresentar na tabela """
-            self.listar()
+                """ agora tem que puxar os dados do banco, e apresentar na tabela """
+                self.listar()
         
     def excluir(self) :
         url_delete = 'http://localhost/pyqt_agenda/php/api/delete.php'
@@ -274,14 +274,12 @@ class Ui_MainWindow(object):
             if x == QMessageBox.StandardButton.Yes:
                 self.tabela.removeRow(linha)
                 response = requests.delete(url_delete,  json=data)
-                print(response.text)
-                print("id:" + item_id)
         else:
             print("Nenhuma linha selecionada.")
             
     def editar(self) :  
-        url = 'http://localhost/pyqt_agenda/php/api/edita.php'
         linha = self.tabela.currentRow()
+        self.salvar_btn.setText("Atualizar")
         
         if linha >= 0 :
             item_id = self.tabela.item(linha, 1)
@@ -301,18 +299,41 @@ class Ui_MainWindow(object):
         
         qdate = QDate.fromString(text_nasc, "dd-MM-yyyy")
         if not qdate.isValid():
-            qdate = QDate.fromString(text_nasc, "yyyy-MM-dd")
+            qdate = QDate.fromString(text_nasc, "dd-MM-yyyy")
             self.data_nasc.setDate(qdate)
         
         self.linha_obs.setText(text_observacoes)
+         
+        dados_atualiza = {
+            'id' : item_id.text(),
+            'nome' : self.linha_nome.text(),
+            'telefone' : self.linha_telefone.text(),
+            'email' : self.linha_email.text(),
+            'nascimento': self.data_nasc.date().toString('dd-MM-yyyy'),
+            'observacoes' : self.linha_obs.text() 
+        }
+        self.salvar_btn.clicked.connect(self.atualiza)
         
+    def atualiza(self) :
+        linha = self.tabela.currentRow()
+        if self.salvar_btn.text() == "Atualizar" :
+            item_id = self.tabela.item(linha, 1)
+            dados_ok = {
+                'id' : item_id.text(),
+                'nome' : self.linha_nome.text(),
+                'telefone' : self.linha_telefone.text(),
+                'email' : self.linha_email.text(),
+                'nascimento': self.data_nasc.date().toString('dd-MM-yyyy'),
+                'observacoes' : self.linha_obs.text() 
+            }
             
-        
-        
-        
-        
-        
-        
+            self.cancelar_btn.clicked.connect(self.padrao)
+            
+            url = 'http://localhost/pyqt_agenda/php/api/edita.php'
+            resposta = requests.post(url, json=dados_ok)
+            self.salvar_btn.setText("Salvar")
+            print(resposta.text)
+            self.padrao()
         
 """ não mexer """    
 
