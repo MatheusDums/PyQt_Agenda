@@ -212,7 +212,7 @@ class Ui_MainWindow(object):
             'nome' : self.linha_nome.text(),
             'telefone' : self.linha_telefone.text(),
             'email' : self.linha_email.text(),
-            'nascimento': self.data_nasc.date().toString('yyyy-MM-dd'),
+            'nascimento': self.data_nasc.date().toString('dd-MM-yyyy'),
             'observacoes' : self.linha_obs.text()    
         }
         url = 'http://localhost/pyqt_agenda/php/api/insere.php'
@@ -279,8 +279,7 @@ class Ui_MainWindow(object):
         else:
             print("Nenhuma linha selecionada.")
             
-    def editar(self) :
-        print('teste')    
+    def editar(self) :  
         url = 'http://localhost/pyqt_agenda/php/api/edita.php'
         linha = self.tabela.currentRow()
         
@@ -299,9 +298,13 @@ class Ui_MainWindow(object):
         self.linha_nome.setText(text_nome)
         self.linha_telefone.setText(text_telefone)
         self.linha_email.setText(text_email)
-        self.data_nasc.date().toString(text_nasc)
+        
+        qdate = QDate.fromString(text_nasc, "dd-MM-yyyy")
+        if not qdate.isValid():
+            qdate = QDate.fromString(text_nasc, "yyyy-MM-dd")
+            self.data_nasc.setDate(qdate)
+        
         self.linha_obs.setText(text_observacoes)
-        print(text_nasc)
         
             
         
