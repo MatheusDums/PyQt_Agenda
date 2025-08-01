@@ -3,10 +3,11 @@ from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QMessageBox, QApplication, QTableWidget, QTableWidgetItem, QWidget
 from PyQt6.QtCore import QDate, QTimer
 from datetime import datetime
+from teste_id import Ui_MainWindow
 import requests
 import json
 
-class Ui_MainWindow(object):
+class Ui_Tela1(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(753, 541)
@@ -62,6 +63,8 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        
+        self.MainWindow = MainWindow 
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -97,12 +100,20 @@ class Ui_MainWindow(object):
             resposta_json = json.loads(resposta.text)
             statuscode = resposta.status_code
             if resposta_json['status'] == 200:
-                reply = QMessageBox()
+                """ reply = QMessageBox()
                 reply.setWindowTitle("Agenda de Contatos")
                 reply.setWindowIcon(QIcon('assets/images/image.png'))
                 reply.setText("Login realizado com sucesso!")
                 reply.setStandardButtons(QMessageBox.StandardButton.Yes)
-                x = reply.exec()
+                x = reply.exec() """
+                
+                from main import Ui_MainWindow
+                self.window_principal = QtWidgets.QMainWindow()
+                self.ui_principal = Ui_MainWindow()
+                self.ui_principal.setupUi(self.window_principal)
+                self.window_principal.show()
+                
+                self.MainWindow.close()
                 
             elif resposta_json['status'] == 400:
                 reply = QMessageBox()
@@ -130,7 +141,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
+    ui = Ui_Tela1()
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec())
