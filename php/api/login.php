@@ -14,23 +14,23 @@ $dados = file_get_contents("php://input");
         $senha = $dados_log['password'];
     
         $encontrado = false;
-        
-        /* tentar lcoalizar no banco de dados */
 
+        $stmt = $pdo->prepare('SELECT pyt_id, pyt_user, pyt_senha FROM tb_python_login');
+        $stmt->execute();
+        $dados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
-        /* 
-        foreach($data as $dataint) {
-            if(in_array($email, $dataint) and in_array($senha, $dataint) ) {
-                echo Response::json(200, 'success', $dataint);
+        foreach($dados as $dataint) {
+            if($dataint['pyt_user'] === $user && $dataint['pyt_senha'] === $senha) {
                 $encontrado = true;
+                echo Response::json(200, 'Autorizado', 'Funcionou');
                 break;
             }
         }
 
         if($encontrado === false) {
             echo Response::json(400, 'error', 'Credenciais Incorretas');
-        } */
+            die();
+        } 
     }else {
         echo "Erro ao decodificar JSON.";
     }

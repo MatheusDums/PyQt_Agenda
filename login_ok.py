@@ -94,16 +94,33 @@ class Ui_MainWindow(object):
             
             url = 'http://localhost/pyqt_agenda/php/api/login.php'
             resposta = requests.post(url, json=dados)
-            print(resposta.text)
-            status_code = resposta.status_code
-            print(status_code)
-            
-            
-            
-            
+            resposta_json = json.loads(resposta.text)
+            statuscode = resposta.status_code
+            if resposta_json['status'] == 200:
+                reply = QMessageBox()
+                reply.setWindowTitle("Agenda de Contatos")
+                reply.setWindowIcon(QIcon('assets/images/image.png'))
+                reply.setText("Login realizado com sucesso!")
+                reply.setStandardButtons(QMessageBox.StandardButton.Yes)
+                x = reply.exec()
+                
+            elif resposta_json['status'] == 400:
+                reply = QMessageBox()
+                reply.setWindowTitle("Agenda de Contatos")
+                reply.setWindowIcon(QIcon('assets/images/image.png'))
+                reply.setText("Credenciais incorretas!")
+                reply.setStandardButtons(QMessageBox.StandardButton.Yes)
+                x = reply.exec()
+                
+            else:
+                reply = QMessageBox()
+                reply.setWindowTitle("Agenda de Contatos")
+                reply.setWindowIcon(QIcon('assets/images/image.png'))
+                reply.setText("Erro ao conectar com o servidor!")
+                reply.setStandardButtons(QMessageBox.StandardButton.Yes)
+                x = reply.exec()
+
             self.padrao()
-
-
 
     def padrao(self) :
         self.linha_user.setText('')

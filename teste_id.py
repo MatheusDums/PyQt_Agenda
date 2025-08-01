@@ -161,6 +161,10 @@ class Ui_MainWindow(object):
         self.editar_btn.setText(_translate("MainWindow", "Editar"))
         self.excluir_btn.setText(_translate("MainWindow", "Excluir"))
         """ desenvolvimento """
+        self.editar_btn.hide()
+        self.excluir_btn.hide()
+        self.tabela.itemSelectionChanged.connect(self.verifica_selecao)
+        
         self.salvar_btn.clicked.connect(self.envia)
         self.cancelar_btn.clicked.connect(self.padrao)
         self.excluir_btn.clicked.connect(self.excluir)
@@ -175,6 +179,9 @@ class Ui_MainWindow(object):
         self.data_nasc.setDate(QDate(2000, 1, 1))
         self.linha_obs.setText("")
         self.salvar_btn.setText("Salvar")
+        self.editar_btn.hide()
+        self.excluir_btn.hide()
+
         
     def listar(self) :
         url = 'http://localhost/pyqt_agenda/php/api/listar.php'
@@ -334,6 +341,15 @@ class Ui_MainWindow(object):
             self.salvar_btn.setText("Salvar")
             print(resposta.text)
             self.padrao()
+            
+    def verifica_selecao(self):
+        selecionados = self.tabela.selectedItems()
+        if selecionados:
+            self.editar_btn.show()
+            self.excluir_btn.show()
+        else:
+            self.editar_btn.hide()
+            self.excluir_btn.hide()
         
 """ não mexer """    
 
