@@ -10,136 +10,89 @@ import sys
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(752, 524)
-        MainWindow.setStyleSheet("background-color: rgb(255, 255, 255);")
-        MainWindow.setToolButtonStyle(QtCore.Qt.ToolButtonStyle.ToolButtonIconOnly)
+        MainWindow.showMaximized()  # JANELA MAXIMIZADA
+        MainWindow.setStyleSheet("background-color: #ffffff;")
+        
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.title_label = QtWidgets.QLabel(parent=self.centralwidget)
-        self.title_label.setGeometry(QtCore.QRect(0, -8, 751, 51))
-        self.title_label.setStyleSheet("font: 75 14pt \"Segoe Print\";")
+        
+        self.layout = QtWidgets.QVBoxLayout(self.centralwidget)
+        self.layout.setContentsMargins(50, 30, 50, 30)  # Margens laterais e superior/inferior
+        self.layout.setSpacing(15)
+
+        # TÍTULO
+        self.title_label = QtWidgets.QLabel("Agenda de Contatos")
         self.title_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.title_label.setObjectName("title_label")
-        self.tabela = QtWidgets.QTableWidget(parent=self.centralwidget)
-        self.tabela.setGeometry(QtCore.QRect(0, 280, 621, 241))
-        self.tabela.setAutoFillBackground(False)
-        self.tabela.setStyleSheet("")
-        self.tabela.setObjectName("tabela")
+        self.title_label.setStyleSheet("font: 20pt 'Segoe Print';")
+        self.layout.addWidget(self.title_label)
+
+        # FORMULÁRIO
+        self.form_layout = QtWidgets.QGridLayout()
+        self.form_layout.setHorizontalSpacing(20)
+        self.form_layout.setVerticalSpacing(10)
+
+        self.label_nome = QtWidgets.QLabel("Nome")
+        self.linha_nome = QtWidgets.QLineEdit()
+
+        self.label_telefone = QtWidgets.QLabel("Telefone")
+        self.linha_telefone = QtWidgets.QLineEdit()
+
+        self.label_email = QtWidgets.QLabel("Email")
+        self.linha_email = QtWidgets.QLineEdit()
+
+        self.label_obs = QtWidgets.QLabel("Observações")
+        self.linha_obs = QtWidgets.QLineEdit()
+
+        self.label_nascimento = QtWidgets.QLabel("Data de Nascimento")
+        self.data_nasc = QtWidgets.QDateEdit()
+        self.data_nasc.setCalendarPopup(True)
+        self.data_nasc.setDate(QDate(2000, 1, 1))
+
+        self.form_layout.addWidget(self.label_nome, 0, 0)
+        self.form_layout.addWidget(self.linha_nome, 1, 0)
+
+        self.form_layout.addWidget(self.label_telefone, 0, 1)
+        self.form_layout.addWidget(self.linha_telefone, 1, 1)
+
+        self.form_layout.addWidget(self.label_email, 2, 0)
+        self.form_layout.addWidget(self.linha_email, 3, 0)
+
+        self.form_layout.addWidget(self.label_obs, 2, 1)
+        self.form_layout.addWidget(self.linha_obs, 3, 1)
+
+        self.form_layout.addWidget(self.label_nascimento, 4, 0)
+        self.form_layout.addWidget(self.data_nasc, 5, 0)
+
+        self.layout.addLayout(self.form_layout)
+
+        # BOTÕES
+        self.botoes_layout = QtWidgets.QHBoxLayout()
+        self.salvar_btn = QtWidgets.QPushButton("Salvar")
+        self.salvar_btn.setStyleSheet("background-color: #00ff00; font-weight: bold;")
+        self.cancelar_btn = QtWidgets.QPushButton("Cancelar")
+        self.cancelar_btn.setStyleSheet("background-color: #ff0000; color: #000; font-weight: bold;")
+
+        self.botoes_layout.addWidget(self.salvar_btn)
+        self.botoes_layout.addWidget(self.cancelar_btn)
+        self.layout.addLayout(self.botoes_layout)
+
+        # TABELA
+        self.tabela = QtWidgets.QTableWidget()
         self.tabela.setColumnCount(6)
-        self.tabela.setRowCount(0)
-        item = QtWidgets.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.tabela.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.tabela.setHorizontalHeaderItem(1, item)
-        item = QtWidgets.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.tabela.setHorizontalHeaderItem(2, item)
-        item = QtWidgets.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.tabela.setHorizontalHeaderItem(3, item)
-        item = QtWidgets.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.tabela.setHorizontalHeaderItem(4, item)
-        item = QtWidgets.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.tabela.setHorizontalHeaderItem(5, item)
-        self.tabela.horizontalHeader().setDefaultSectionSize(101)
-        self.frame = QtWidgets.QFrame(parent=self.centralwidget)
-        self.frame.setGeometry(QtCore.QRect(0, 40, 751, 241))
-        self.frame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame.setObjectName("frame")
-        self.gridLayout = QtWidgets.QGridLayout(self.frame)
-        self.gridLayout.setObjectName("gridLayout")
-        self.linha_email = QtWidgets.QLineEdit(parent=self.frame)
-        self.linha_email.setObjectName("linha_email")
-        self.gridLayout.addWidget(self.linha_email, 3, 0, 1, 1)
-        self.label_nascimento = QtWidgets.QLabel(parent=self.frame)
-        self.label_nascimento.setObjectName("label_nascimento")
-        self.gridLayout.addWidget(self.label_nascimento, 4, 0, 1, 1)
-        self.label_nome = QtWidgets.QLabel(parent=self.frame)
-        self.label_nome.setObjectName("label_nome")
-        self.gridLayout.addWidget(self.label_nome, 0, 0, 1, 1)
-        self.label_telefone = QtWidgets.QLabel(parent=self.frame)
-        self.label_telefone.setObjectName("label_telefone")
-        self.gridLayout.addWidget(self.label_telefone, 0, 2, 1, 1)
-        self.label_obs = QtWidgets.QLabel(parent=self.frame)
-        self.label_obs.setObjectName("label_obs")
-        self.gridLayout.addWidget(self.label_obs, 2, 2, 1, 1)
-        self.linha_nome = QtWidgets.QLineEdit(parent=self.frame)
-        self.linha_nome.setObjectName("linha_nome")
-        self.gridLayout.addWidget(self.linha_nome, 1, 0, 1, 1)
-        self.label_email = QtWidgets.QLabel(parent=self.frame)
-        self.label_email.setObjectName("label_email")
-        self.gridLayout.addWidget(self.label_email, 2, 0, 1, 1)
-        self.linha_telefone = QtWidgets.QLineEdit(parent=self.frame)
-        self.linha_telefone.setAutoFillBackground(False)
-        self.linha_telefone.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.linha_telefone.setObjectName("linha_telefone")
-        self.gridLayout.addWidget(self.linha_telefone, 1, 2, 1, 1)
-        self.salvar_btn = QtWidgets.QPushButton(parent=self.frame)
-        self.salvar_btn.setStyleSheet("background-color: rgb(0, 255, 0);\n"
-"color: rgb(0, 0, 0);")
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("assets/images/save-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.salvar_btn.setIcon(icon)
-        self.salvar_btn.setObjectName("salvar_btn")
-        self.gridLayout.addWidget(self.salvar_btn, 7, 0, 1, 2)
-        self.linha_obs = QtWidgets.QLineEdit(parent=self.frame)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.linha_obs.sizePolicy().hasHeightForWidth())
-        self.linha_obs.setSizePolicy(sizePolicy)
-        self.linha_obs.setObjectName("linha_obs")
-        self.gridLayout.addWidget(self.linha_obs, 3, 2, 3, 1)
-        self.cancelar_btn = QtWidgets.QPushButton(parent=self.frame)
-        self.cancelar_btn.setStyleSheet("background-color: rgb(255, 0, 0);\n"
-"color: rgb(0, 0, 0);")
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("assets/images/cancel-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.cancelar_btn.setIcon(icon1)
-        self.cancelar_btn.setObjectName("cancelar_btn")
-        self.gridLayout.addWidget(self.cancelar_btn, 7, 2, 1, 1)
-        self.data_nasc = QtWidgets.QDateEdit(parent=self.frame)
-        self.data_nasc.setObjectName("data_nasc")
-        self.gridLayout.addWidget(self.data_nasc, 5, 0, 1, 1)
-        self.sair_btn = QtWidgets.QFrame(parent=self.centralwidget)
-        self.sair_btn.setGeometry(QtCore.QRect(620, 280, 121, 241))
-        self.sair_btn.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.sair_btn.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.sair_btn.setObjectName("sair_btn")
-        self.editar_btn = QtWidgets.QPushButton(parent=self.sair_btn)
-        self.editar_btn.setGeometry(QtCore.QRect(10, 10, 101, 31))
-        self.editar_btn.setStyleSheet("background-color: rgb(0, 85, 255);\n"
-"color: rgb(0, 0, 0);")
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("assets/images/edit-3-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.editar_btn.setIcon(icon2)
-        self.editar_btn.setObjectName("editar_btn")
-        self.excluir_btn = QtWidgets.QPushButton(parent=self.sair_btn)
-        self.excluir_btn.setGeometry(QtCore.QRect(10, 50, 101, 31))
-        self.excluir_btn.setStyleSheet("color: rgb(0, 0, 0);\n"
-"background-color: rgb(255, 0, 0);")
-        icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap("assets/images/delete-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.excluir_btn.setIcon(icon3)
-        self.excluir_btn.setObjectName("excluir_btn")
-        self.sair_btn_2 = QtWidgets.QPushButton(parent=self.sair_btn)
-        self.sair_btn_2.setGeometry(QtCore.QRect(70, 200, 51, 31))
-        self.sair_btn_2.setStyleSheet("background-color: rgb(255, 240, 240);")
-        icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap("../../../xampp/htdocs/pyqt_agenda/assets/images/exit-to-app-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.sair_btn_2.setIcon(icon4)
-        self.sair_btn_2.setObjectName("sair_btn_2")
-        self.tabela.setColumnWidth(1, 0)
+        self.tabela.setHorizontalHeaderLabels(["Nome", "ID", "Telefone", "Email", "Nascimento", "Observações"])
+        self.tabela.setColumnHidden(1, True)  # Oculta a coluna ID
+        self.tabela.setSelectionBehavior(QtWidgets.QTableWidget.SelectionBehavior.SelectRows)
+        self.tabela.setEditTriggers(QtWidgets.QTableWidget.EditTrigger.NoEditTriggers)
+        self.tabela.horizontalHeader().setStretchLastSection(True)
+        self.tabela.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Stretch)
+        self.layout.addWidget(self.tabela)
+
         MainWindow.setCentralWidget(self.centralwidget)
 
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        self.listar()
+        # Ocultar ID se ainda existir
+        self.tabela.setColumnHidden(1, True)
+
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -238,7 +191,7 @@ class Ui_MainWindow(object):
         if not texto_nome or not texto_email or not texto_telefone or not texto_observacoes:
             reply = QMessageBox()
             reply.setWindowTitle("Agenda de Contatos")
-            reply.setWindowIcon(QIcon('assets/images/image.png'))
+            """ reply.setWindowIcon(QIcon('assets/images/image.png')) """
             reply.setText("Preencha todos os campos!")
             reply.setStandardButtons(QMessageBox.StandardButton.Yes)
             x = reply.exec()
@@ -251,14 +204,14 @@ class Ui_MainWindow(object):
                 if status_code == 200 :
                     reply = QMessageBox()
                     reply.setWindowTitle("Agenda de Contatos")
-                    reply.setWindowIcon(QIcon('assets/images/image.png'))
+                    """ reply.setWindowIcon(QIcon('assets/images/image.png')) """
                     reply.setText("Contato adicionado com sucesso")
                     reply.setStandardButtons(QMessageBox.StandardButton.Yes)
                     x = reply.exec()
                 else:
                     reply = QMessageBox()
                     reply.setWindowTitle("Agenda de Contatos")
-                    reply.setWindowIcon(QIcon('assets/images/image.png'))
+                    """ reply.setWindowIcon(QIcon('assets/images/image.png')) """
                     reply.setText("Erro ao adicionar contato")
                     reply.setStandardButtons(QMessageBox.StandardButton.Yes)
                     x = reply.exec()
@@ -280,7 +233,7 @@ class Ui_MainWindow(object):
         if linha >= 0:
             reply = QMessageBox()
             reply.setWindowTitle("Agenda de Contatos")
-            reply.setWindowIcon(QIcon('assets/images/image.png'))
+            """ reply.setWindowIcon(QIcon('assets/images/image.png')) """
             reply.setText("Deseja apagar o contato?")
             reply.setStandardButtons(QMessageBox.StandardButton.Yes | 
                      QMessageBox.StandardButton.No)
@@ -371,5 +324,5 @@ if __name__ == "__main__":
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
-    MainWindow.show()
+    MainWindow.showMaximized()
     sys.exit(app.exec())

@@ -11,5 +11,5 @@ class TelaLogin(QMainWindow):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     login = TelaLogin()
-    login.show()
+    login.showMaximized()
     sys.exit(app.exec())
