@@ -361,7 +361,7 @@ class Ui_MainWindow(object):
         
         
     def sair(self) :
-        self.close()
+        print('saindo')
 """ não mexer """    
 
 
