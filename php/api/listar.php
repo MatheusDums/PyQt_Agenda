@@ -6,4 +6,10 @@ require_once '../config/conector.php';
 $listar = $pdo->query('SELECT `pyt_id`,`pyt_nome`, `pyt_telefone`, `pyt_email`, `pyt_nascimento`, `pyt_observacoes` FROM tb_python_api');
 $dados = $listar->fetchAll(PDO::FETCH_ASSOC);
 
+/* if ($dados) {
+    echo Response::json(200, 'Autorizado', 'Funcionou');
+} else {
+    echo Response::json(400, 'error', 'Credenciais Incorretas');
+} */
+
 echo json_encode($dados);

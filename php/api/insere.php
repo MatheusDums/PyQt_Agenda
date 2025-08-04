@@ -26,10 +26,11 @@ if ($dados) {
         $adiciona->bindParam(':observacoes', $observacoes);
 
         $adiciona->execute();
+        echo Response::json(200, 'Autorizado', 'ok');
 
     } else {
-        echo "Erro ao decodificar JSON.";
+        echo Response::json(400, 'error', 'Erro ao decodificar JSON.');
     }
 } else {
-    echo "Nenhum dado recebido.";
+    echo Response::json(400, 'error', 'Nenhum dado recebido.');
 }

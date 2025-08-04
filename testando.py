@@ -1,12 +1,16 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QMessageBox
 from PyQt6.QtCore import QDate
 import requests
+from datetime import datetime
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setStyleSheet("background-color: #ffffff;")
+        MainWindow.setWindowTitle("Agenda de contatos")
+        MainWindow.setWindowIcon(QIcon("assets/images/image.png"))
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.layout = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -44,24 +48,15 @@ class Ui_MainWindow(object):
         self.layout.addLayout(self.form_layout)
         self.botoes_layout = QtWidgets.QHBoxLayout()
         self.salvar_btn = QtWidgets.QPushButton("Salvar")
-        self.salvar_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #00ff00;
-                font-weight: bold;
-                padding: 10px;
-                border: none;
-            }
-        """)
+        self.salvar_btn.setStyleSheet("""QPushButton {background-color: #00ff00;font-weight: bold;padding: 10px;border: none;}""")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("assets/images/save-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.salvar_btn.setIcon(icon)
         self.cancelar_btn = QtWidgets.QPushButton("Cancelar")
-        self.cancelar_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #ff0000;
-                color: black;
-                font-weight: bold;
-                padding: 10px;
-                border: none;
-            }
-        """)
+        self.cancelar_btn.setStyleSheet("""QPushButton {background-color: #ff0000;color: black;font-weight: bold;padding: 10px;border: none;}""")
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap("assets/images/cancel-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.cancelar_btn.setIcon(icon1)
         self.botoes_layout.addWidget(self.salvar_btn)
         self.botoes_layout.addWidget(self.cancelar_btn)
         self.layout.addLayout(self.botoes_layout)
@@ -78,38 +73,23 @@ class Ui_MainWindow(object):
         self.side_button_layout = QtWidgets.QVBoxLayout()
         self.side_button_layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
         self.editar_btn = QtWidgets.QPushButton("Editar")
-        self.editar_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #0000ff;
-                color: white;
-                font-weight: bold;
-                padding: 10px;
-                border: none;
-            }
-        """)
+        self.editar_btn.setStyleSheet("""QPushButton {background-color: #0000ff;font-weight: bold;padding: 10px;border: none;}""")
         self.editar_btn.setFixedWidth(120)
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap("assets/images/edit-3-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.editar_btn.setIcon(icon2)
         self.excluir_btn = QtWidgets.QPushButton("Excluir")
-        self.excluir_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #ff0000;
-                color: white;
-                font-weight: bold;
-                padding: 10px;
-                border: none;
-            }
-        """)
+        self.excluir_btn.setStyleSheet("""QPushButton {background-color: #ff0000;font-weight: bold;padding: 10px;border: none;}""")
         self.excluir_btn.setFixedWidth(120)
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap("assets/images/delete-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.excluir_btn.setIcon(icon3)
         self.sair_btn_2 = QtWidgets.QPushButton("Sair")
-        self.sair_btn_2.setStyleSheet("""
-            QPushButton {
-                background-color: #444444;
-                color: white;
-                font-weight: bold;
-                padding: 10px;
-                border: none;
-            }
-        """)
+        self.sair_btn_2.setStyleSheet("""QPushButton {background-color: #444444;font-weight: bold;padding: 10px;border: none;}""")
         self.sair_btn_2.setFixedWidth(120)
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap("assets/images/exit-to-app-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.sair_btn_2.setIcon(icon4)
         self.side_button_layout.addWidget(self.editar_btn)
         self.side_button_layout.addWidget(self.excluir_btn)
         self.side_button_layout.addStretch()
@@ -119,15 +99,14 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.editar_btn.hide()
         self.excluir_btn.hide()
-        
+                
         """ desenvolvimento """
         self.salvar_btn.clicked.connect(self.envia)
         self.cancelar_btn.clicked.connect(self.padrao)
         self.editar_btn.clicked.connect(self.editar)
         self.excluir_btn.clicked.connect(self.excluir)
         self.sair_btn_2.clicked.connect(self.sair)
-        self.tabela.itemSelectionChanged.connect(self.verifica_selecao)
-        
+        self.tabela.itemSelectionChanged.connect(self.verifica_selecao)    
         
     def padrao(self):
         self.linha_nome.setText("")
@@ -168,7 +147,8 @@ class Ui_MainWindow(object):
             self.tabela.setItem(linha, 1, QtWidgets.QTableWidgetItem(str(id)))
             self.tabela.setItem(linha, 2, QtWidgets.QTableWidgetItem(telefone))
             self.tabela.setItem(linha, 3, QtWidgets.QTableWidgetItem(email))
-            self.tabela.setItem(linha, 4, QtWidgets.QTableWidgetItem(nascimento))
+            nascimento_ok = datetime.strptime(nascimento, "%Y-%m-%d").strftime("%d/%m/%Y")
+            self.tabela.setItem(linha, 4, QtWidgets.QTableWidgetItem(nascimento_ok))
             self.tabela.setItem(linha, 5, QtWidgets.QTableWidgetItem(observacoes))
 
         self.padrao()
@@ -180,14 +160,19 @@ class Ui_MainWindow(object):
         texto_observacoes = self.linha_obs.text()
 
         if not texto_nome or not texto_email or not texto_telefone or not texto_observacoes:
-            QMessageBox.information(None, "Agenda de Contatos", "Preencha todos os campos!")
+            reply = QMessageBox()
+            reply.setWindowTitle("Agenda de Contatos")
+            reply.setWindowIcon(QIcon('assets/images/image.png'))
+            reply.setText("Preencha todos os campos!")
+            reply.setStandardButtons(QMessageBox.StandardButton.Yes)
+            x = reply.exec()
             return
 
         data = {
             'nome': texto_nome,
             'telefone': texto_telefone,
             'email': texto_email,
-            'nascimento': self.data_nasc.date().toString('dd-MM-yyyy'),
+            'nascimento': self.data_nasc.date().toString('yyyy-MM-dd'),
             'observacoes': texto_observacoes
         }
 
@@ -195,10 +180,20 @@ class Ui_MainWindow(object):
         resposta = requests.post(url, json=data)
 
         if resposta.status_code == 200:
-            QMessageBox.information(None, "Agenda de Contatos", "Contato adicionado com sucesso")
+            reply = QMessageBox()
+            reply.setWindowTitle("Agenda de Contatos")
+            reply.setWindowIcon(QIcon('assets/images/image.png'))
+            reply.setText("Contato adicionado com sucesso")
+            reply.setStandardButtons(QMessageBox.StandardButton.Yes)
+            x = reply.exec()
             self.listar()
         else:
-            QMessageBox.warning(None, "Agenda de Contatos", "Erro ao adicionar contato")
+            reply = QMessageBox()
+            reply.setWindowTitle("Agenda de Contatos")
+            reply.setWindowIcon(QIcon('assets/images/image.png'))
+            reply.setText("Preencha todos os campos!")
+            reply.setStandardButtons(QMessageBox.StandardButton.Yes)
+            x = reply.exec()
 
         self.padrao()
 
@@ -211,29 +206,30 @@ class Ui_MainWindow(object):
             self.editar_btn.hide()
             self.excluir_btn.hide()
 
-    def excluir(self):
+    def excluir(self) :
+        url_delete = 'http://localhost/pyqt_agenda/php/api/delete.php'
         linha = self.tabela.currentRow()
-        if linha < 0:
-            QMessageBox.warning(None, "Agenda de Contatos", "Nenhuma linha selecionada.")
-            return
-
-        item_id = self.tabela.item(linha, 1).text()
-        resposta = QMessageBox.question(None, "Agenda de Contatos", "Deseja apagar o contato?",
-                                        QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        if linha >= 0 :
+            item = self.tabela.item(linha, 1)
+            item_id = item.text()
+        data = {
+            'id' : item_id 
+        }
         
-
-        if resposta == QMessageBox.StandardButton.Yes:
-            url_delete = 'http://localhost/pyqt_agenda/php/api/delete.php'
-            data = {'id': item_id}
-            try:
-                response = requests.delete(url_delete, json=data)
-                if response.status_code == 200:
-                    self.tabela.removeRow(linha)
-                    QMessageBox.information(None, "Agenda de Contatos", "Contato removido com sucesso")
-                else:
-                    QMessageBox.warning(None, "Agenda de Contatos", "Erro ao remover contato")
-            except Exception as e:
-                QMessageBox.warning(None, "Agenda de Contatos", f"Erro: {e}")
+        if linha >= 0:
+            reply = QMessageBox()
+            reply.setWindowTitle("Agenda de Contatos")
+            reply.setWindowIcon(QIcon('assets/images/image.png'))
+            reply.setText("Deseja apagar o contato?")
+            reply.setStandardButtons(QMessageBox.StandardButton.Yes | 
+                     QMessageBox.StandardButton.No)
+            x = reply.exec()
+            
+            if x == QMessageBox.StandardButton.Yes:
+                self.tabela.removeRow(linha)
+                response = requests.delete(url_delete,  json=data)
+        else:
+            print("Nenhuma linha selecionada.")
 
     def editar(self):
         linha = self.tabela.currentRow()
@@ -250,9 +246,8 @@ class Ui_MainWindow(object):
         self.linha_obs.setText(self.tabela.item(linha, 5).text())
 
         data_str = self.tabela.item(linha, 4).text()
-        qdate = QDate.fromString(data_str, "dd-MM-yyyy")
-        if not qdate.isValid():
-            qdate = QDate(2000, 1, 1)
+        nascimento_ok = datetime.strptime(data_str,"%d/%m/%Y" ).strftime("%Y-%m-%d")
+        qdate = QDate.fromString(nascimento_ok, "yyyy-MM-dd")
         self.data_nasc.setDate(qdate)
 
         try:
@@ -268,7 +263,7 @@ class Ui_MainWindow(object):
             'nome': self.linha_nome.text(),
             'telefone': self.linha_telefone.text(),
             'email': self.linha_email.text(),
-            'nascimento': self.data_nasc.date().toString('dd-MM-yyyy'),
+            'nascimento': self.data_nasc.date().toString('yyyy-MM-dd'),
             'observacoes': self.linha_obs.text()
         }
 
@@ -276,7 +271,12 @@ class Ui_MainWindow(object):
         resposta = requests.post(url, json=dados_ok)
 
         if resposta.status_code == 200:
-            QMessageBox.information(None, "Agenda de Contatos", "Contato atualizado com sucesso")
+            reply = QMessageBox()
+            reply.setWindowTitle("Agenda de Contatos")
+            reply.setWindowIcon(QIcon('assets/images/image.png'))
+            reply.setText("Contato editado com sucesso")
+            reply.setStandardButtons(QMessageBox.StandardButton.Yes)
+            x = reply.exec()
             self.listar()
         else:
             QMessageBox.warning(None, "Agenda de Contatos", "Erro ao atualizar contato")

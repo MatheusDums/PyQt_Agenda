@@ -1,7 +1,6 @@
 <?php
 require_once '../config/index.php';
 require_once '../config/resposta.php';
-require_once '../config/dados.php';
 require_once '../config/conector.php';
 
 $dados = file_get_contents("php://input");
@@ -16,10 +15,14 @@ if ($dados) {
         $remove = $pdo->prepare("DELETE FROM tb_python_api WHERE pyt_id = :linha");
         $remove->bindParam(':linha', $id);
         $remove->execute();
+        echo Response::json(200, 'Autorizado', 'Funcionou');
+
     } else {
-        echo "nenhum dado processado";
+        echo Response::json(400, 'error', 'Nenhum dado processado');
+        die();
     }
 
 } else {
-    echo "nenhum dado recebido";
+    echo Response::json(400, 'error', 'Nenhum dado recebido');
+    die();
 }

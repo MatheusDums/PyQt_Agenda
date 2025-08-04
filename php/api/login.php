@@ -1,7 +1,6 @@
 <?php
 require_once '../config/index.php';
 require_once '../config/resposta.php';
-require_once '../config/dados.php';
 require_once '../config/conector_login.php';
       
 $dados = file_get_contents("php://input");
@@ -32,9 +31,11 @@ $dados = file_get_contents("php://input");
             die();
         } 
     }else {
-        echo "Erro ao decodificar JSON.";
+        echo Response::json(400, 'error', 'Erro ao decodificar JSON');
+        die();
     }
 } else {
-    echo "Nenhum dado recebido.";
+    echo Response::json(400, 'error', 'Nenhum dado recebido');
+    die();
 }
 ?>

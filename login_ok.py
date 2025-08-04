@@ -3,7 +3,7 @@ from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QMessageBox, QApplication, QTableWidget, QTableWidgetItem, QWidget
 from PyQt6.QtCore import QDate, QTimer
 from datetime import datetime
-from teste_id import Ui_MainWindow
+from errados.python.teste_id import Ui_MainWindow
 import requests
 import json
 

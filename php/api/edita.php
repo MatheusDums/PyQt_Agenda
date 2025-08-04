@@ -27,6 +27,7 @@ if ($dados_atualiza) {
         $atualiza->bindParam(':observacoes', $new_observacoes);
 
         $atualiza->execute();
+        echo Response::json(200, 'Autorizado', 'Ok');
 
     } else {
         echo "Erro ao decodificar JSON.";
