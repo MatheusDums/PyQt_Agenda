@@ -1,7 +1,8 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
-from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QMessageBox
-from PyQt6.QtCore import QDate
+from PyQt6.QtGui import QIcon, QColor
+from PyQt6.QtWidgets import QMessageBox, QAbstractItemView
+from PyQt6.QtCore import QDate, Qt
+import pyqtgraph as pg
 import requests
 from datetime import datetime
 
@@ -48,17 +49,24 @@ class Ui_MainWindow(object):
         self.layout.addLayout(self.form_layout)
         self.botoes_layout = QtWidgets.QHBoxLayout()
         self.salvar_btn = QtWidgets.QPushButton("Salvar")
-        self.salvar_btn.setStyleSheet("""QPushButton {background-color: #00ff00;font-weight: bold;padding: 10px;border: none;}""")
+        self.salvar_btn.setStyleSheet("""QPushButton {background-color: #009417;font-weight: bold;padding: 10px;border: none;}""")
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("assets/images/save-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.salvar_btn.setIcon(icon)
         self.cancelar_btn = QtWidgets.QPushButton("Cancelar")
-        self.cancelar_btn.setStyleSheet("""QPushButton {background-color: #ff0000;color: black;font-weight: bold;padding: 10px;border: none;}""")
+        self.cancelar_btn.setStyleSheet("""QPushButton {background-color: #ff7f05;color: black;font-weight: bold;padding: 10px;border: none;}""")
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap("assets/images/cancel-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.cancelar_btn.setIcon(icon1)
+        self.excluir_btn = QtWidgets.QPushButton("Excluir")
+        self.excluir_btn.setStyleSheet("""QPushButton {background-color: #ff0000;font-weight: bold;padding: 10px;border: none;}""")
+        """ self.excluir_btn.setFixedWidth(120) """
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap("assets/images/delete-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.excluir_btn.setIcon(icon3)
         self.botoes_layout.addWidget(self.salvar_btn)
         self.botoes_layout.addWidget(self.cancelar_btn)
+        self.botoes_layout.addWidget(self.excluir_btn)
         self.layout.addLayout(self.botoes_layout)
         self.horizontal_main_layout = QtWidgets.QHBoxLayout()
         self.tabela = QtWidgets.QTableWidget()
@@ -78,20 +86,13 @@ class Ui_MainWindow(object):
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap("assets/images/edit-3-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.editar_btn.setIcon(icon2)
-        self.excluir_btn = QtWidgets.QPushButton("Excluir")
-        self.excluir_btn.setStyleSheet("""QPushButton {background-color: #ff0000;font-weight: bold;padding: 10px;border: none;}""")
-        self.excluir_btn.setFixedWidth(120)
-        icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap("assets/images/delete-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.excluir_btn.setIcon(icon3)
-        self.sair_btn_2 = QtWidgets.QPushButton("Sair")
-        self.sair_btn_2.setStyleSheet("""QPushButton {background-color: #444444;font-weight: bold;padding: 10px;border: none;}""")
-        self.sair_btn_2.setFixedWidth(120)
+        self.sair_btn_2 = QtWidgets.QPushButton("")
+        self.sair_btn_2.setStyleSheet("""QPushButton {background-color: #d3d3d3;font-weight: bold;padding: 10px;border: none;}""")
+        self.sair_btn_2.setFixedWidth(40)
         icon4 = QtGui.QIcon()
         icon4.addPixmap(QtGui.QPixmap("assets/images/exit-to-app-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.sair_btn_2.setIcon(icon4)
         self.side_button_layout.addWidget(self.editar_btn)
-        self.side_button_layout.addWidget(self.excluir_btn)
         self.side_button_layout.addStretch()
         self.side_button_layout.addWidget(self.sair_btn_2)
         self.horizontal_main_layout.addLayout(self.side_button_layout)
@@ -106,7 +107,8 @@ class Ui_MainWindow(object):
         self.editar_btn.clicked.connect(self.editar)
         self.excluir_btn.clicked.connect(self.excluir)
         self.sair_btn_2.clicked.connect(self.sair)
-        self.tabela.itemSelectionChanged.connect(self.verifica_selecao)    
+        self.tabela.itemSelectionChanged.connect(self.verifica_selecao)  
+        self.tabela.itemSelectionChanged.connect(self.highlight_selected_row)  
         
     def padrao(self):
         self.linha_nome.setText("")
@@ -198,14 +200,19 @@ class Ui_MainWindow(object):
         self.padrao()
 
     def verifica_selecao(self):
+        linha = self.tabela.currentRow()
         selecionados = self.tabela.selectedItems()
         if selecionados:
-            self.editar_btn.show()
             self.excluir_btn.show()
+            self.editar()
         else:
-            self.editar_btn.hide()
             self.excluir_btn.hide()
+            self.padrao()
+    
+    def highlight_selected_row(self):
+        self.tabela.setStyleSheet("QTableWidget::item:selected { background-color: lightblue; color: black; }")
 
+    
     def excluir(self) :
         url_delete = 'http://localhost/pyqt_agenda/php/api/delete.php'
         linha = self.tabela.currentRow()
@@ -285,7 +292,16 @@ class Ui_MainWindow(object):
         self.padrao()
 
     def sair(self):
-        QtWidgets.QApplication.quit()
+        reply = QMessageBox()
+        reply.setWindowTitle("Agenda de Contatos")
+        reply.setWindowIcon(QIcon('assets/images/image.png'))
+        reply.setText("Deseja sair da agenda de contatos?")
+        reply.setStandardButtons(QMessageBox.StandardButton.Yes | 
+                 QMessageBox.StandardButton.No)
+        x = reply.exec()
+        
+        if x == QMessageBox.StandardButton.Yes:
+            QtWidgets.QApplication.quit()
 
 
 if __name__ == "__main__":
