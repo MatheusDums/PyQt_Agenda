@@ -10,61 +10,47 @@ import json
 class Ui_Tela1(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(753, 541)
-        MainWindow.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
-        MainWindow.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
-        self.centralwidget.setObjectName("centralwidget")
-        self.frame = QtWidgets.QFrame(parent=self.centralwidget)
-        self.frame.setGeometry(QtCore.QRect(0, 160, 751, 381))
-        self.frame.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
-        self.frame.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
-        self.frame.setStyleSheet("")
-        self.frame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame.setObjectName("frame")
-        self.linha_user = QtWidgets.QLineEdit(parent=self.frame)
-        self.linha_user.setGeometry(QtCore.QRect(210, 70, 331, 51))
-        font = QtGui.QFont()
-        font.setPointSize(11)
-        self.linha_user.setFont(font)
-        self.linha_user.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
-        self.linha_user.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.linha_user.setObjectName("linha_user")
-        self.login_btn = QtWidgets.QPushButton(parent=self.frame)
-        self.login_btn.setGeometry(QtCore.QRect(210, 210, 331, 51))
-        self.login_btn.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
-        self.login_btn.setStyleSheet("background-color: rgb(0, 0, 0);\n"
-"color: rgb(255, 255, 255);\n"
-"border: 1px solid #000;\n"
-"border-radius: 5px;\n"
-"\n"
-"")
-        self.login_btn.setObjectName("login_btn")
-        self.linha_pass = QtWidgets.QLineEdit(parent=self.frame)
-        self.linha_pass.setGeometry(QtCore.QRect(210, 140, 331, 51))
-        font = QtGui.QFont()
-        font.setPointSize(11)
-        self.linha_pass.setFont(font)
-        self.linha_pass.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
-        self.linha_pass.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
-        self.linha_pass.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.linha_pass.setObjectName("linha_pass")
-        self.label_2 = QtWidgets.QLabel(parent=self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(0, 100, 751, 61))
-        self.label_2.setStyleSheet("font: 75 16pt \"Segoe Print\";\n"
-"font: 20pt \"Segoe Print\";")
-        self.label_2.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.label_2.setObjectName("label_2")
+        MainWindow.setStyleSheet("background-color: white;")
+        MainWindow.setWindowIcon(QIcon("assets/images/image.png"))
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
         MainWindow.setCentralWidget(self.centralwidget)
-        self.statusbar = QtWidgets.QStatusBar(parent=MainWindow)
-        self.statusbar.setObjectName("statusbar")
+        layout_principal = QtWidgets.QVBoxLayout(self.centralwidget)
+        layout_principal.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.label_login = QtWidgets.QLabel("Login")
+        font_login = QtGui.QFont("Segoe Print", 18)
+        font_login.setItalic(True)
+        self.label_login.setFont(font_login)
+        self.label_login.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        layout_principal.addWidget(self.label_login)
+        frame = QtWidgets.QFrame()
+        frame_layout = QtWidgets.QVBoxLayout(frame)
+        frame_layout.setSpacing(20)
+        frame.setContentsMargins(0, 0, 0, 0)
+        frame.setMaximumWidth(400)
+        frame.setStyleSheet("""
+            QLineEdit {
+border: none;border-bottom: 1px solid #000; padding: 10px;font-size: 14pt;} """)
+        self.linha_user = QtWidgets.QLineEdit()
+        self.linha_user.setPlaceholderText("Email")
+        frame_layout.addWidget(self.linha_user)
+        self.linha_pass = QtWidgets.QLineEdit()
+        self.linha_pass.setPlaceholderText("Senha")
+        self.linha_pass.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
+        frame_layout.addWidget(self.linha_pass)
+        self.login_btn = QtWidgets.QPushButton("Entrar")
+        self.login_btn.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
+        self.login_btn.setStyleSheet("""
+            QPushButton {background-color: black;color: white;border-radius: 5px;padding: 12px;font-size: 12pt;}
+QPushButton:hover {background-color: #333;}""")
+        frame_layout.addWidget(self.login_btn)
+        layout_principal.addWidget(frame)
+        self.statusbar = QtWidgets.QStatusBar(MainWindow)
         MainWindow.setStatusBar(self.statusbar)
-
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        
-        self.MainWindow = MainWindow 
+
+        self.MainWindow = MainWindow
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -73,7 +59,6 @@ class Ui_Tela1(object):
         self.linha_user.setPlaceholderText(_translate("MainWindow", "Email"))
         self.login_btn.setText(_translate("MainWindow", "Entrar"))
         self.linha_pass.setPlaceholderText(_translate("MainWindow", "Senha"))
-        self.label_2.setText(_translate("MainWindow", "BudContatos - Login"))
         
         """ desenvolvimento """
         self.login_btn.clicked.connect(self.entrar)
@@ -100,20 +85,15 @@ class Ui_Tela1(object):
             resposta_json = json.loads(resposta.text)
             statuscode = resposta.status_code
             if resposta_json['status'] == 200:
-                """ reply = QMessageBox()
-                reply.setWindowTitle("Agenda de Contatos")
-                reply.setWindowIcon(QIcon('assets/images/image.png'))
-                reply.setText("Login realizado com sucesso!")
-                reply.setStandardButtons(QMessageBox.StandardButton.Yes)
-                x = reply.exec() """
                 
-                from main import Ui_MainWindow
+                from testando import Ui_MainWindow
                 self.window_principal = QtWidgets.QMainWindow()
                 self.ui_principal = Ui_MainWindow()
                 self.ui_principal.setupUi(self.window_principal)
-                self.window_principal.show()
-                
+                self.ui_principal.listar()
+                self.window_principal.showMaximized()
                 self.MainWindow.close()
+
                 
             elif resposta_json['status'] == 400:
                 reply = QMessageBox()
@@ -143,5 +123,5 @@ if __name__ == "__main__":
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_Tela1()
     ui.setupUi(MainWindow)
-    MainWindow.show()
+    MainWindow.showMaximized()
     sys.exit(app.exec())
