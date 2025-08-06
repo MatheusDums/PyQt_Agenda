@@ -2,7 +2,6 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtGui import QIcon, QColor
 from PyQt6.QtWidgets import QMessageBox, QAbstractItemView
 from PyQt6.QtCore import QDate, Qt
-import pyqtgraph as pg
 import requests
 from datetime import datetime
 
