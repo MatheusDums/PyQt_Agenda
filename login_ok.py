@@ -83,6 +83,8 @@ QPushButton:hover {background-color: #333;}""")
             url = 'http://localhost/pyqt_agenda/php/api/login.php'
             resposta = requests.post(url, json=dados)
             resposta_json = json.loads(resposta.text)
+            dados_rec = resposta_json['data']['dados_rec']
+            print('dados:' , dados_rec)
             statuscode = resposta.status_code
             if resposta_json['status'] == 200:
                 
