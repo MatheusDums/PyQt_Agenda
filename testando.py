@@ -2,8 +2,16 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtGui import QIcon, QColor
 from PyQt6.QtWidgets import QMessageBox, QAbstractItemView
 from PyQt6.QtCore import QDate, Qt
+<<<<<<< HEAD
+import pyqtgraph as pg
+import base64
+import os
+=======
+>>>>>>> 75240c740614f6762431537e4d1f91fd5af2ad9b
 import requests
 from datetime import datetime
+import time
+import json
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -101,14 +109,85 @@ class Ui_MainWindow(object):
         self.excluir_btn.hide()
                 
         """ desenvolvimento """
-        self.salvar_btn.clicked.connect(self.envia)
+        self.salvar_btn.clicked.connect(lambda: self.execucao_segura(self.envia))
+        self.excluir_btn.clicked.connect(lambda: self.execucao_segura(self.excluir))
+        self.editar_btn.clicked.connect(lambda: self.execucao_segura(self.atualiza))
         self.cancelar_btn.clicked.connect(self.padrao)
-        self.editar_btn.clicked.connect(self.editar)
-        self.excluir_btn.clicked.connect(self.excluir)
         self.sair_btn_2.clicked.connect(self.sair)
         self.tabela.itemSelectionChanged.connect(self.verifica_selecao)  
-        self.tabela.itemSelectionChanged.connect(self.highlight_selected_row)  
+        self.tabela.itemSelectionChanged.connect(self.highlight_selected_row)
+    token = os.environ['TOKEN']
+    
+    def token_db(self) :
+        url_token = 'http://localhost/pyqt_agenda/php/api/token_db.php'
+        response = requests.get(url_token)
+        data = response.json()
+        return data
+
+    def validaToken(self) :
+        try:
+            token = os.getenv("TOKEN")
+            if not token:
+                return False
+
+            decoded_bytes = base64.b64decode(token)
+            decoded_str = decoded_bytes.decode('utf-8')
+            dados = json.loads(decoded_str)
+
+            exp = dados.get('exp')
+            if exp is None or time.time() > exp:
+                return False
+
+            return True
+        except Exception as e:
+            print("Erro ao validar token:", e)
+            return False
         
+
+    
+    """ def validaToken(self) :
+        token = self.token
+        token_dec = base64.b64decode(token)
+        decoded_str = token_dec.decode("utf-8")        
+        dados = json.loads(decoded_str)
+        token_validado = False
+        exp = dados['exp']
+        if exp is None :
+            reply = QMessageBox()
+            reply.setWindowTitle("Agenda de Contatos")
+            reply.setWindowIcon(QIcon('assets/images/image.png'))
+            reply.setText("Token Inválido")
+            reply.setStandardButtons(QMessageBox.StandardButton.Yes)
+            x = reply.exec()
+            print("token inválido")
+            token_validado = False
+        elif time.time() > exp :
+            reply = QMessageBox()
+            reply.setWindowTitle("Agenda de Contatos")
+            reply.setWindowIcon(QIcon('assets/images/image.png'))
+            reply.setText("Token Expirado, logue novamente")
+            reply.setStandardButtons(QMessageBox.StandardButton.Yes)
+            x = reply.exec()
+            token_validado = False
+        else :
+            token_validado = True
+            
+        return token_validado """
+    
+    
+    def execucao_segura(self, funcao):
+        if self.validaToken():
+            funcao()
+        else:
+            reply = QMessageBox()
+            reply.setWindowTitle("Agenda de Contatos")
+            reply.setWindowIcon(QIcon('assets/images/image.png'))
+            reply.setText("Token Inválido ou expirado")
+            reply.setStandardButtons(QMessageBox.StandardButton.Yes)
+            x = reply.exec()
+            if x == QMessageBox.StandardButton.Yes:
+                QtWidgets.QApplication.quit()
+    
     def padrao(self):
         self.linha_nome.setText("")
         self.linha_telefone.setText("")
@@ -123,7 +202,7 @@ class Ui_MainWindow(object):
             self.salvar_btn.clicked.disconnect()
         except Exception:
             pass
-        self.salvar_btn.clicked.connect(self.envia)
+        self.salvar_btn.clicked.connect(lambda: self.execucao_segura(self.envia))
 
     def listar(self):
         url = 'http://localhost/pyqt_agenda/php/api/listar.php'
@@ -133,7 +212,7 @@ class Ui_MainWindow(object):
         except Exception as e:
             print(f"Erro ao listar: {e}")
             dados = []
-
+            
         self.tabela.setRowCount(0)
         for i in range(len(dados)):
             id = dados[i]['pyt_id']
@@ -151,15 +230,17 @@ class Ui_MainWindow(object):
             nascimento_ok = datetime.strptime(nascimento, "%Y-%m-%d").strftime("%d/%m/%Y")
             self.tabela.setItem(linha, 4, QtWidgets.QTableWidgetItem(nascimento_ok))
             self.tabela.setItem(linha, 5, QtWidgets.QTableWidgetItem(observacoes))
-
+            
         self.padrao()
+        self.token_db()
+
 
     def envia(self):
         texto_nome = self.linha_nome.text()
         texto_telefone = self.linha_telefone.text()
         texto_email = self.linha_email.text()
         texto_observacoes = self.linha_obs.text()
-
+        
         if not texto_nome or not texto_email or not texto_telefone or not texto_observacoes:
             reply = QMessageBox()
             reply.setWindowTitle("Agenda de Contatos")
@@ -168,7 +249,7 @@ class Ui_MainWindow(object):
             reply.setStandardButtons(QMessageBox.StandardButton.Yes)
             x = reply.exec()
             return
-
+        
         data = {
             'nome': texto_nome,
             'telefone': texto_telefone,
@@ -176,10 +257,10 @@ class Ui_MainWindow(object):
             'nascimento': self.data_nasc.date().toString('yyyy-MM-dd'),
             'observacoes': texto_observacoes
         }
-
+        
         url = 'http://localhost/pyqt_agenda/php/api/insere.php'
         resposta = requests.post(url, json=data)
-
+        
         if resposta.status_code == 200:
             reply = QMessageBox()
             reply.setWindowTitle("Agenda de Contatos")
@@ -195,9 +276,10 @@ class Ui_MainWindow(object):
             reply.setText("Preencha todos os campos!")
             reply.setStandardButtons(QMessageBox.StandardButton.Yes)
             x = reply.exec()
-
+            
         self.padrao()
-
+        
+        
     def verifica_selecao(self):
         linha = self.tabela.currentRow()
         selecionados = self.tabela.selectedItems()
@@ -262,6 +344,8 @@ class Ui_MainWindow(object):
             pass
 
         self.salvar_btn.clicked.connect(lambda: self.atualiza(item_id))
+        self.salvar_btn.clicked.connect(lambda: self.execucao_segura(self.atualiza))
+        
 
     def atualiza(self, item_id):
         dados_ok = {

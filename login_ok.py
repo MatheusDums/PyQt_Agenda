@@ -4,6 +4,7 @@ from PyQt6.QtWidgets import QMessageBox, QApplication, QTableWidget, QTableWidge
 from PyQt6.QtCore import QDate, QTimer
 from datetime import datetime
 from errados.python.teste_id import Ui_MainWindow
+import os
 import requests
 import json
 
@@ -84,7 +85,9 @@ QPushButton:hover {background-color: #333;}""")
             resposta = requests.post(url, json=dados)
             resposta_json = json.loads(resposta.text)
             dados_rec = resposta_json['data']['dados_rec']
-            print('dados:' , dados_rec)
+            token = resposta_json['data']['dados_rec']['Token']
+            print(token)
+            os.environ['TOKEN'] = token
             statuscode = resposta.status_code
             if resposta_json['status'] == 200:
                 

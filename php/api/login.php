@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once '../config/index.php';
 require_once '../config/resposta.php';
 require_once '../config/conector_login.php';
@@ -25,11 +24,9 @@ $dados = file_get_contents("php://input");
 
             $payload = json_encode([
                 'Id' => $dados_login[0]['pyt_id'],
-                'exp' => time() + 3600
+                'exp' => time() + 3600 /* uma hora para expirar, 3600 = 60 (seg) * 60 (min) */
             ]);
             $token = base64_encode($payload);
-            $_SESSION['token'] = $token;
-            header("Authorization: Bearer " . $token);
             /* $token = md5(uniqid(mt_rand(), true)); */
 
             if($token) {
