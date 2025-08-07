@@ -2,9 +2,12 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtGui import QIcon, QColor
 from PyQt6.QtWidgets import QMessageBox, QAbstractItemView
 from PyQt6.QtCore import QDate, Qt
+<<<<<<< HEAD
 import pyqtgraph as pg
 import base64
 import os
+=======
+>>>>>>> 75240c740614f6762431537e4d1f91fd5af2ad9b
 import requests
 from datetime import datetime
 import time
