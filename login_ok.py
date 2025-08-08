@@ -32,7 +32,7 @@ class Ui_Tela1(object):
             QLineEdit {
 border: none;border-bottom: 1px solid #000; padding: 10px;font-size: 14pt;} """)
         self.linha_user = QtWidgets.QLineEdit()
-        self.linha_user.setPlaceholderText("Email")
+        self.linha_user.setPlaceholderText("Usuário")
         frame_layout.addWidget(self.linha_user)
         self.linha_pass = QtWidgets.QLineEdit()
         self.linha_pass.setPlaceholderText("Senha")
