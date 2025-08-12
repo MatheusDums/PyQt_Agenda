@@ -22,7 +22,7 @@ class Ui_MainWindow(object):
         self.layout.setSpacing(15)
         self.title_label = QtWidgets.QLabel("Agenda de Contatos")
         self.title_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.title_label.setStyleSheet("font: 20pt 'Segoe Print';")
+        self.title_label.setStyleSheet("font: 25pt 'Dubai';")
         self.layout.addWidget(self.title_label)
         self.form_layout = QtWidgets.QGridLayout()
         self.form_layout.setHorizontalSpacing(20)
