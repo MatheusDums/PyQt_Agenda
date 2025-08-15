@@ -147,6 +147,25 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Quantidade"))
         self.tabela_label.setText(_translate("MainWindow", "Registro de impressões"))
 
+        """ desenvolvimento """
+        self.sair_btn.clicked.connect(self.sair)
+
+
+
+    def sair(self):
+        reply = QMessageBox()
+        reply.setWindowTitle("Agenda de Contatos")
+        reply.setWindowIcon(QIcon('assets/images/image.png'))
+        reply.setText("Deseja sair da agenda de contatos?")
+        reply.setStandardButtons(QMessageBox.StandardButton.Yes | 
+                 QMessageBox.StandardButton.No)
+        reply.button(QMessageBox.StandardButton.Yes).setText("Sim")
+        reply.button(QMessageBox.StandardButton.No).setText("Não")
+
+        x = reply.exec()
+        
+        if x == QMessageBox.StandardButton.Yes:
+            QtWidgets.QApplication.quit()
 
 if __name__ == "__main__":
     import sys
