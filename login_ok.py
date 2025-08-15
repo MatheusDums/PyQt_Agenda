@@ -4,6 +4,8 @@ from PyQt6.QtWidgets import QMessageBox, QApplication, QTableWidget, QTableWidge
 from PyQt6.QtCore import QDate, QTimer
 from datetime import datetime
 from errados.python.teste_id import Ui_MainWindow
+import configparser
+from configparser import ConfigParser
 import os
 import requests
 import json
@@ -57,12 +59,18 @@ QPushButton:hover {background-color: #333;}""")
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Login - BudContatos"))
         MainWindow.setWindowIcon(QIcon('assets/images/image.png'))
-        self.linha_user.setPlaceholderText(_translate("MainWindow", "Email"))
+        self.linha_user.setPlaceholderText(_translate("MainWindow", "Usuário"))
         self.login_btn.setText(_translate("MainWindow", "Entrar"))
         self.linha_pass.setPlaceholderText(_translate("MainWindow", "Senha"))
         
         """ desenvolvimento """
         self.login_btn.clicked.connect(self.entrar)
+    
+    config = configparser.ConfigParser()
+    config.read("config.ini")
+    userinfo = config["API"]
+    userPort = userinfo['port']
+    userEndpoint = userinfo['endpoint']
         
     def entrar(self):
         texto_user = self.linha_user.text()
@@ -81,7 +89,7 @@ QPushButton:hover {background-color: #333;}""")
                 'password' : texto_password
             }
             
-            url = 'http://localhost/pyqt_agenda/php/api/login.php'
+            url = self.userEndpoint + 'login.php'
             resposta = requests.post(url, json=dados)
             resposta_json = json.loads(resposta.text)
             dados_rec = resposta_json['data']['dados_rec']

@@ -3,10 +3,12 @@ from PyQt6.QtWidgets import QApplication, QMainWindow
 from login_ok import Ui_Tela1
 import configparser
 import os
+from PyQt6.QtWidgets import QMessageBox
+from PyQt6.QtGui import QIcon
 
 config = configparser.ConfigParser()
 
-if os.path.exists("application.ini"):
+if os.path.exists("config.ini"):
     class TelaLogin(QMainWindow):
         def __init__(self):
             super().__init__()
@@ -20,6 +22,6 @@ if os.path.exists("application.ini"):
         sys.exit(app.exec())
        
 else:
-       print("Erro: Arquivo config.ini não encontrado.")
-       exit()
+    print("erro")
+    exit()
 

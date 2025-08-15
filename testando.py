@@ -6,8 +6,8 @@ import base64
 import os
 import requests
 from datetime import datetime
-import os
-import base64
+import configparser
+from configparser import ConfigParser
 import time
 import json
 
@@ -114,10 +114,16 @@ class Ui_MainWindow(object):
         self.sair_btn_2.clicked.connect(self.sair)
         self.tabela.itemSelectionChanged.connect(self.verifica_selecao)  
         self.tabela.itemSelectionChanged.connect(self.highlight_selected_row)
+        
+    config = configparser.ConfigParser()
+    config.read("config.ini")
+    userinfo = config["API"]
+    userPort = userinfo['port']
+    userEndpoint = userinfo['endpoint']
     token = os.environ['TOKEN']
     
     def token_db(self) :
-        url_token = 'http://localhost/pyqt_agenda/php/api/token_db.php'
+        url_token = self.userEndpoint + 'token_db.php'
         response = requests.get(url_token)
         data = response.json()
         return data
@@ -182,6 +188,7 @@ class Ui_MainWindow(object):
             reply.setWindowIcon(QIcon('assets/images/image.png'))
             reply.setText("Token Inválido ou expirado")
             reply.setStandardButtons(QMessageBox.StandardButton.Yes)
+            reply.button(QMessageBox.StandardButton.Yes).setText("Sim")
             x = reply.exec()
             if x == QMessageBox.StandardButton.Yes:
                 QtWidgets.QApplication.quit()
@@ -203,7 +210,7 @@ class Ui_MainWindow(object):
         self.salvar_btn.clicked.connect(lambda: self.execucao_segura(self.envia))
 
     def listar(self):
-        url = 'http://localhost/pyqt_agenda/php/api/listar.php'
+        url = self.userEndpoint + 'listar.php'
         try:
             response = requests.get(url)
             dados = response.json()
@@ -245,6 +252,7 @@ class Ui_MainWindow(object):
             reply.setWindowIcon(QIcon('assets/images/image.png'))
             reply.setText("Preencha todos os campos!")
             reply.setStandardButtons(QMessageBox.StandardButton.Yes)
+            reply.button(QMessageBox.StandardButton.Yes).setText("Ok")
             x = reply.exec()
             return
         
@@ -256,7 +264,7 @@ class Ui_MainWindow(object):
             'observacoes': texto_observacoes
         }
         
-        url = 'http://localhost/pyqt_agenda/php/api/insere.php'
+        url = self.userEndpoint + 'insere.php'
         resposta = requests.post(url, json=data)
         
         if resposta.status_code == 200:
@@ -265,6 +273,7 @@ class Ui_MainWindow(object):
             reply.setWindowIcon(QIcon('assets/images/image.png'))
             reply.setText("Contato adicionado com sucesso")
             reply.setStandardButtons(QMessageBox.StandardButton.Yes)
+            reply.button(QMessageBox.StandardButton.Yes).setText("Ok")
             x = reply.exec()
             self.listar()
         else:
@@ -273,6 +282,7 @@ class Ui_MainWindow(object):
             reply.setWindowIcon(QIcon('assets/images/image.png'))
             reply.setText("Preencha todos os campos!")
             reply.setStandardButtons(QMessageBox.StandardButton.Yes)
+            reply.button(QMessageBox.StandardButton.Yes).setText("Ok")
             x = reply.exec()
             
         self.padrao()
@@ -293,7 +303,7 @@ class Ui_MainWindow(object):
 
     
     def excluir(self) :
-        url_delete = 'http://localhost/pyqt_agenda/php/api/delete.php'
+        url_delete = self.userEndpoint + 'delete.php'
         linha = self.tabela.currentRow()
         if linha >= 0 :
             item = self.tabela.item(linha, 1)
@@ -309,6 +319,8 @@ class Ui_MainWindow(object):
             reply.setText("Deseja apagar o contato?")
             reply.setStandardButtons(QMessageBox.StandardButton.Yes | 
                      QMessageBox.StandardButton.No)
+            reply.button(QMessageBox.StandardButton.Yes).setText("Sim")
+            reply.button(QMessageBox.StandardButton.No).setText("Não")
             x = reply.exec()
             
             if x == QMessageBox.StandardButton.Yes:
@@ -355,7 +367,7 @@ class Ui_MainWindow(object):
             'observacoes': self.linha_obs.text()
         }
 
-        url = 'http://localhost/pyqt_agenda/php/api/edita.php'
+        url = self.userEndpoint + 'edita.php'
         resposta = requests.post(url, json=dados_ok)
 
         if resposta.status_code == 200:
@@ -364,6 +376,7 @@ class Ui_MainWindow(object):
             reply.setWindowIcon(QIcon('assets/images/image.png'))
             reply.setText("Contato editado com sucesso")
             reply.setStandardButtons(QMessageBox.StandardButton.Yes)
+            reply.button(QMessageBox.StandardButton.Yes).setText("Sim")
             x = reply.exec()
             self.listar()
         else:
@@ -379,6 +392,9 @@ class Ui_MainWindow(object):
         reply.setText("Deseja sair da agenda de contatos?")
         reply.setStandardButtons(QMessageBox.StandardButton.Yes | 
                  QMessageBox.StandardButton.No)
+        reply.button(QMessageBox.StandardButton.Yes).setText("Sim")
+        reply.button(QMessageBox.StandardButton.No).setText("Não")
+
         x = reply.exec()
         
         if x == QMessageBox.StandardButton.Yes:

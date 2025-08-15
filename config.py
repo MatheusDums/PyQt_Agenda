@@ -1,20 +1,6 @@
-""" servers = [ 
-        "localhost:3306" 
-        ]
-
-for server in servers:
-    try:
-        host, port = server.split(":")
-        port = int(port)
-        socket.create_connection((host, port), 3)
-        print(server, "OK")
-    except:
-        print(server, "FAIL") """
-        
-        
-import socket
 import configparser
 
+""" cria o config.ini """
 config = configparser.ConfigParser()
 
 config['API'] = {
@@ -24,3 +10,9 @@ config['API'] = {
 
 with open('config.ini', 'w') as configfile:
     config.write(configfile)
+
+""" ler o config.ini """
+config.read("config.ini")
+userinfo = config["API"]
+
+print(f'a porta é {userinfo['port']}')
