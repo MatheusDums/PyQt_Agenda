@@ -45,7 +45,7 @@
 
         ^FO30,576^GB420,50,3^FS
         ^CF0,30
-        ^FO40,590^FDTeste pelo config.ini^FS
+        ^FO40,590^FDMeu Contato^FS
 
 
         ^XZ

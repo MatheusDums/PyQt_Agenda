@@ -163,12 +163,11 @@ class Ui_MainWindow(object):
         res = requests.get(url)
         dados = res.json()
 
-
-        largura = int(59 * 8)
-        altura = int(81 * 8)
-
+        
 
         for r in dados:
+            largura = int(59 * 8)
+            altura = int(81 * 8)
             zpl = f"""
         ^XA
 
@@ -216,7 +215,7 @@ class Ui_MainWindow(object):
 
         ^FO30,576^GB420,50,3^FS
         ^CF0,30
-        ^FO40,590^FD{dados[4]['pyt_observacoes']}^FS
+        ^FO40,590^FD{dados[0]['pyt_observacoes']}^FS
 
 
         ^XZ
