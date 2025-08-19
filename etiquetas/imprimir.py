@@ -159,12 +159,41 @@ class Ui_MainWindow(object):
     userEndpoint = userinfo['endpoint']
         
     def etiquetas(self):
-        url = self.userEndpoint + "etiquetas.php"
-        res = requests.get(url)
-        dados = res.json()
-
+        codigo = self.linha_code.toPlainText()
         
-
+        dados_codigo = {
+            'codigo': codigo
+        }
+        url_codigo = self.userEndpoint + "buscaEtiqueta.php"
+        envia = requests.post(url_codigo, json=dados_codigo)
+        dados = envia.json()
+        
+        if not dados:
+            reply = QMessageBox()
+            reply.setWindowTitle("Agenda de Contatos")
+            reply.setWindowIcon(QIcon('./assets/images/image.png'))
+            reply.setText("Nenhum registro encontrado com esse código.")
+            reply.setStandardButtons(QMessageBox.StandardButton.Yes)
+            reply.button(QMessageBox.StandardButton.Yes).setText("Sim")
+            x = reply.exec()
+            return
+        
+        id = dados[0]['pyt_id']
+        codigo = dados[0]['pyt_telefone']
+        
+        """ parte de quantidade """
+        quantidade = self.linha_qtd.toPlainText()
+        print(quantidade)
+        if not quantidade.isdigit() or int(quantidade) <= 0:
+            reply = QMessageBox()
+            reply.setWindowTitle("Agenda de Contatos")
+            reply.setWindowIcon(QIcon('./assets/images/image.png'))
+            reply.setText("Quantidade inválida. Por favor, insira o número de cópias que deseja imprimir.")
+            reply.setStandardButtons(QMessageBox.StandardButton.Yes)
+            reply.button(QMessageBox.StandardButton.Yes).setText("Sim")
+            x = reply.exec()
+            return
+        
         for r in dados:
             largura = int(59 * 8)
             altura = int(81 * 8)
@@ -223,9 +252,18 @@ class Ui_MainWindow(object):
 
         with open(f"etiquetas/etiqueta.zpl", "w") as f:
             f.write(zpl)
-            
-        print("etiqueta salva")
-
+        
+        reply = QMessageBox()
+        reply.setWindowTitle("Agenda de Contatos")
+        reply.setWindowIcon(QIcon('./assets/images/image.png'))
+        reply.setText(f"Deseja imprimir a etiqueta {codigo} ?")
+        reply.setStandardButtons(QMessageBox.StandardButton.Yes | 
+                 QMessageBox.StandardButton.No)
+        reply.button(QMessageBox.StandardButton.Yes).setText("Sim")
+        reply.button(QMessageBox.StandardButton.No).setText("Não")
+        x = reply.exec()
+        
+        
 
 
     def sair(self):
