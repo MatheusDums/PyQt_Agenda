@@ -196,7 +196,7 @@ class Ui_MainWindow(object):
         
         for r in dados:
             largura = int(59 * 8)
-            altura = int(81 * 8)
+            altura = int(75 * 8)
             zpl = f"""
         ^XA
 
@@ -206,48 +206,49 @@ class Ui_MainWindow(object):
 
         ^CF0,25
 
-        ^FO30,30^BXN,6,200
+        ^FO20,85^BXN,6,200
         ^FD{dados[0]['pyt_telefone']}^FS
 
-        ^FO370,30^BXN,6,200
+        ^FO360,85^BXN,6,200
         ^FD{dados[0]['pyt_telefone']}^FS
 
-        ^FO30,150^BXN,6,200
+        ^FO20,185^BXN,6,200
         ^FD{dados[0]['pyt_telefone']}^FS
 
-        ^FO370,150^BXN,6, 200
+        ^FO360,185^BXN,6, 200
         ^FD{dados[0]['pyt_telefone']}^FS
 
-        ^FO30,270^BXN,6,200
+        ^FO20,285^BXN,6,200
         ^FD{dados[0]['pyt_telefone']}^FS
 
-        ^FO370,270^BXN,6, 200
+        ^FO360,285^BXN,6, 200
         ^FD{dados[0]['pyt_telefone']}^FS
 
-        ^FO135,100^BXN,15,200
+        ^FO125,125^BXN,15,200
         ^FD{dados[0]['pyt_telefone']}^FS
 
         ^CF0,50
-        ^FO110,380^FD{dados[0]['pyt_telefone']}^FS
+        ^FO100,385^FD{dados[0]['pyt_telefone']}^FS
 
-        ^FO30,435^GB420,50,3^FS
-        ^CF0,30
-        ^FO40,450^FD{dados[0]['pyt_nome']}^FS
+        ^FO20,440^GB420,40,3^FS
+        ^CF0,20
+        ^FO30,455^FD{dados[0]['pyt_nome']}^FS
 
-        ^FO30,482^GB420,50,3^FS
-        ^CF0,30
-        ^FO40,495^FD{dados[0]['pyt_telefone']}   |  {dados[0]['pyt_nascimento']}^FS
+        ^FO20,477^GB420,40,3^FS
+        ^CF0,20
+        ^FO30,490^FD{dados[0]['pyt_telefone']}   |  {dados[0]['pyt_nascimento']}^FS
 
-        ^FO30,529^GB420,50,3^FS
-        ^CF0,30
-        ^FO40,540^FD{dados[0]['pyt_email']}^FS
+        ^FO20,514^GB420,40,3^FS
+        ^CF0,20
+        ^FO30,528^FD{dados[0]['pyt_email']}^FS
 
-        ^FO30,576^GB420,50,3^FS
-        ^CF0,30
-        ^FO40,590^FD{dados[0]['pyt_observacoes']}^FS
+        ^FO20,551^GB420,40,3^FS
+        ^CF0,20
+        ^FO30,565^FD{dados[0]['pyt_observacoes']}^FS
 
 
         ^XZ
+        
         """
 
         with open(f"etiquetas/etiqueta.zpl", "w") as f:
@@ -263,8 +264,13 @@ class Ui_MainWindow(object):
         reply.button(QMessageBox.StandardButton.No).setText("Não")
         x = reply.exec()
         
-        
+        if x == QMessageBox.StandardButton.Yes:
+            self.padrao()
 
+
+    def padrao(self):
+        self.linha_code.setText("")
+        self.linha_qtd.setText("")
 
     def sair(self):
         reply = QMessageBox()
