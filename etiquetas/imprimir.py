@@ -206,47 +206,45 @@ class Ui_MainWindow(object):
 
         ^CF0,25
 
-        ^FO20,85^BXN,6,200
+        ^FO20,87^BXN,7,200
         ^FD{dados[0]['pyt_telefone']}^FS
 
-        ^FO360,85^BXN,6,200
+        ^FO350,87^BXN,7,200
         ^FD{dados[0]['pyt_telefone']}^FS
 
-        ^FO20,185^BXN,6,200
+        ^FO20,197^BXN,7,200
         ^FD{dados[0]['pyt_telefone']}^FS
 
-        ^FO360,185^BXN,6, 200
+        ^FO350,197^BXN,7, 200
         ^FD{dados[0]['pyt_telefone']}^FS
 
-        ^FO20,285^BXN,6,200
+        ^FO20,307^BXN,7,200
         ^FD{dados[0]['pyt_telefone']}^FS
 
-        ^FO360,285^BXN,6, 200
+        ^FO350,307^BXN,7, 200
         ^FD{dados[0]['pyt_telefone']}^FS
 
-        ^FO125,125^BXN,15,200
+        ^FO140,157^BXN,13,200
         ^FD{dados[0]['pyt_telefone']}^FS
 
-        ^CF0,50
-        ^FO100,385^FD{dados[0]['pyt_telefone']}^FS
+        ^CF0,45
+        ^FO120,417^FD{dados[0]['pyt_telefone']}^FS
 
-        ^FO20,440^GB420,40,3^FS
+        ^FO20,458^GB420,33,1^FS
         ^CF0,20
-        ^FO30,455^FD{dados[0]['pyt_nome']}^FS
+        ^FO30,467^FD{dados[0]['pyt_nome']}^FS
 
-        ^FO20,477^GB420,40,3^FS
+        ^FO20,490^GB420,33,1^FS
         ^CF0,20
-        ^FO30,490^FD{dados[0]['pyt_telefone']}   |  {dados[0]['pyt_nascimento']}^FS
+        ^FO30,502^FD{dados[0]['pyt_telefone']}   |  {dados[0]['pyt_nascimento']}^FS
 
-        ^FO20,514^GB420,40,3^FS
+        ^FO20,522^GB420,33,1^FS
         ^CF0,20
-        ^FO30,528^FD{dados[0]['pyt_email']}^FS
+        ^FO30,533^FD{dados[0]['pyt_email']}^FS
 
-        ^FO20,551^GB420,40,3^FS
+        ^FO20,554^GB420,33,1^FS
         ^CF0,20
-        ^FO30,565^FD{dados[0]['pyt_observacoes']}^FS
-
-
+        ^FO30,562^FD{dados[0]['pyt_observacoes']}^FS
         ^XZ
         
         """
