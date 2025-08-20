@@ -91,14 +91,25 @@ class Ui_MainWindow(object):
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap("assets/images/edit-3-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.editar_btn.setIcon(icon2)
+        
+        self.print_btn = QtWidgets.QPushButton("")
+        self.print_btn.setStyleSheet("""QPushButton {background-color: #d3d3d3;font-weight: bold;padding: 10px;border: none;}""")
+        self.print_btn.setFixedWidth(70)
+        icon5 = QtGui.QIcon()
+        icon5.addPixmap(QtGui.QPixmap("assets/images/print-svgrepo-com"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.print_btn.setIcon(icon5)
+        self.side_button_layout.addWidget(self.editar_btn)
+        self.side_button_layout.addStretch()
+        self.side_button_layout.addWidget(self.print_btn)
+        
+        
         self.sair_btn_2 = QtWidgets.QPushButton("")
         self.sair_btn_2.setStyleSheet("""QPushButton {background-color: #d3d3d3;font-weight: bold;padding: 10px;border: none;}""")
-        self.sair_btn_2.setFixedWidth(40)
+        self.sair_btn_2.setFixedWidth(70)
         icon4 = QtGui.QIcon()
         icon4.addPixmap(QtGui.QPixmap("assets/images/exit-to-app-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.sair_btn_2.setIcon(icon4)
         self.side_button_layout.addWidget(self.editar_btn)
-        self.side_button_layout.addStretch()
         self.side_button_layout.addWidget(self.sair_btn_2)
         self.horizontal_main_layout.addLayout(self.side_button_layout)
         self.layout.addLayout(self.horizontal_main_layout)
@@ -114,6 +125,7 @@ class Ui_MainWindow(object):
         self.sair_btn_2.clicked.connect(self.sair)
         self.tabela.itemSelectionChanged.connect(self.verifica_selecao)  
         self.tabela.itemSelectionChanged.connect(self.highlight_selected_row)
+        self.print_btn.clicked.connect(self.etiquetas)
         
     config = configparser.ConfigParser()
     config.read("config.ini")
@@ -384,6 +396,16 @@ class Ui_MainWindow(object):
 
         self.salvar_btn.setText("Salvar")
         self.padrao()
+
+    def etiquetas(self):
+        print("teste")
+        """ from imprimir import Ui_MainWindow
+        self.window_principal = QtWidgets.QMainWindow()
+        self.ui_principal = Ui_MainWindow()
+        self.ui_principal.setupUi(self.window_principal)
+        self.ui_principal.etiquetas()
+        self.window_principal.showMaximized()
+        self.MainWindow.close() """
 
     def sair(self):
         reply = QMessageBox()

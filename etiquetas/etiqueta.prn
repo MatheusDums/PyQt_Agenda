@@ -1,0 +1,51 @@
+
+        ^XA
+
+        ^PW462
+        ^LL600
+        ^FS
+
+        ^CF0,25
+
+        ^FO40,52^BXN,7,200
+        ^FD%telefone%^FS
+
+        ^FO370,52^BXN,7,200
+        ^FD%telefone%^FS
+
+        ^FO40,165^BXN,7,200
+        ^FD%telefone%^FS
+
+        ^FO370,165^BXN,7, 200
+        ^FD%telefone%^FS
+
+        ^FO40,278^BXN,7,200
+        ^FD%telefone%^FS
+
+        ^FO370,278^BXN,7, 200
+        ^FD%telefone%^FS
+
+        ^FO165,127^BXN,13,200
+        ^FD%telefone%^FS
+
+        ^CF0,45
+        ^FO135,385^FD%telefone%^FS
+
+        ^FO40,430^GB420,33,1^FS
+        ^CF0,25
+        ^FO50,439^FD%nome%^FS
+
+        ^FO40,462^GB420,33,1^FS
+        ^CF0,25
+        ^FO50,470^FD%telefone%   |  %nasc%^FS
+
+        ^FO40,494^GB420,33,1^FS
+        ^CF0,25
+        ^FO50,504^FD%email%^FS
+
+        ^FO40,526^GB420,33,1^FS
+        ^CF0,25
+        ^FO50,534^FD%observacoes%^FS
+        ^XZ
+        
+        
