@@ -120,7 +120,7 @@ class Ui_MainWindow(object):
         """ desenvolvimento """
         self.salvar_btn.clicked.connect(lambda: self.execucao_segura(self.envia))
         self.excluir_btn.clicked.connect(lambda: self.execucao_segura(self.excluir))
-        self.editar_btn.clicked.connect(lambda: self.execucao_segura(self.atualiza))
+        self.editar_btn.clicked.connect(lambda: self.execucao_segura(self.editar))
         self.cancelar_btn.clicked.connect(self.padrao)
         self.sair_btn_2.clicked.connect(self.sair)
         self.tabela.itemSelectionChanged.connect(self.verifica_selecao)  

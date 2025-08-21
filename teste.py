@@ -5,6 +5,7 @@ import configparser
 import os
 from PyQt6.QtWidgets import QMessageBox
 from PyQt6.QtGui import QIcon
+from winotify import Notification
 
 config = configparser.ConfigParser()
 
@@ -22,6 +23,6 @@ if os.path.exists("config.ini"):
         sys.exit(app.exec())
        
 else:
-    print("erro")
+    print('erro')
     exit()
 

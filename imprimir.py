@@ -2,10 +2,12 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtGui import QIcon, QColor
 from PyQt6.QtWidgets import QMessageBox, QAbstractItemView
 from PyQt6.QtCore import QDate, Qt, QSize
+import base64
 import codecs
 import subprocess
 import os
 import requests
+import shutil
 from datetime import datetime
 import configparser
 from configparser import ConfigParser
@@ -165,9 +167,9 @@ class Ui_MainWindow(object):
 
 
         """ desenvolvimento """
-        self.sair_btn.clicked.connect(self.sair)
-        self.imprimir_btn.clicked.connect(self.etiquetas)
-        self.voltar_btn.clicked.connect(self.voltar)
+        self.sair_btn.clicked.connect(lambda: self.execucao_segura(self.sair))
+        self.imprimir_btn.clicked.connect(lambda: self.execucao_segura(self.etiquetas))
+        self.voltar_btn.clicked.connect(lambda: self.execucao_segura(self.voltar))
         
     config = configparser.ConfigParser()
     config.read("config.ini")
@@ -254,7 +256,7 @@ class Ui_MainWindow(object):
 
             # Enviar o arquivo para a impressora Zebra na porta LPT1
             while (valorqtd > 0):
-                os.system(f'COPY {temp_file} LPT1')
+                shutil.copyfile(temp_file, "LPT1")
                 valorqtd = valorqtd - 1
 
             # Remover o arquivo temporário
@@ -266,6 +268,7 @@ class Ui_MainWindow(object):
             self.tabela.setItem(nova_linha, 1, QtWidgets.QTableWidgetItem(quantidade))
             
             self.padrao()
+            self.token_db()
 
 
     def voltar(self):
@@ -296,6 +299,47 @@ class Ui_MainWindow(object):
         
         if x == QMessageBox.StandardButton.Yes:
             QtWidgets.QApplication.quit()
+
+    """ parte de token """
+    token = os.environ['TOKEN']
+    
+    def token_db(self) :
+        url_token = self.userEndpoint + 'token_db.php'
+        response = requests.get(url_token)
+        data = response.json()
+        return data
+
+    def validaToken(self) :
+        try:
+            token = os.getenv("TOKEN")
+            if not token:
+                return False
+            decoded_bytes = base64.b64decode(token)
+            decoded_str = decoded_bytes.decode('utf-8')
+            dados = json.loads(decoded_str)
+
+            exp = dados.get('exp')
+            if exp is None or time.time() > exp:
+                return False
+
+            return True
+        except Exception as e:
+            print("Erro ao validar token:", e)
+            return False
+        
+    def execucao_segura(self, funcao):
+        if self.validaToken():
+            funcao()
+        else:
+            reply = QMessageBox()
+            reply.setWindowTitle("Agenda de Contatos")
+            reply.setWindowIcon(QIcon('assets/images/image.png'))
+            reply.setText("Token Inválido ou expirado")
+            reply.setStandardButtons(QMessageBox.StandardButton.Yes)
+            reply.button(QMessageBox.StandardButton.Yes).setText("Sim")
+            x = reply.exec()
+            if x == QMessageBox.StandardButton.Yes:
+                QtWidgets.QApplication.quit()
 
 if __name__ == "__main__":
     import sys
