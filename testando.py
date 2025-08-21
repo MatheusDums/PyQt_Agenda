@@ -125,7 +125,7 @@ class Ui_MainWindow(object):
         self.sair_btn_2.clicked.connect(self.sair)
         self.tabela.itemSelectionChanged.connect(self.verifica_selecao)  
         self.tabela.itemSelectionChanged.connect(self.highlight_selected_row)
-        self.print_btn.clicked.connect(self.etiquetas)
+        self.print_btn.clicked.connect(self.imprimir)
         
     config = configparser.ConfigParser()
     config.read("config.ini")
@@ -397,15 +397,14 @@ class Ui_MainWindow(object):
         self.salvar_btn.setText("Salvar")
         self.padrao()
 
-    def etiquetas(self):
-        print("teste")
-        """ from imprimir import Ui_MainWindow
-        self.window_principal = QtWidgets.QMainWindow()
-        self.ui_principal = Ui_MainWindow()
-        self.ui_principal.setupUi(self.window_principal)
-        self.ui_principal.etiquetas()
-        self.window_principal.showMaximized()
-        self.MainWindow.close() """
+    def imprimir(self):
+        from imprimir import Ui_MainWindow as ImprimirWindow
+        self.window_imprimir = QtWidgets.QMainWindow()
+        self.ui_imprimir = ImprimirWindow()
+        self.ui_imprimir.setupUi(self.window_imprimir)
+        self.window_imprimir.showMaximized()
+        self.centralwidget.parent().close()
+
 
     def sair(self):
         reply = QMessageBox()

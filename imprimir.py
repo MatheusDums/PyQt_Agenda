@@ -269,13 +269,14 @@ class Ui_MainWindow(object):
 
 
     def voltar(self):
-        """ from testando import Ui_MainWindow
+        from testando import Ui_MainWindow as TestandoWindow
         self.window_principal = QtWidgets.QMainWindow()
-        self.ui_principal = Ui_MainWindow()
+        self.ui_principal = TestandoWindow()
         self.ui_principal.setupUi(self.window_principal)
         self.ui_principal.listar()
         self.window_principal.showMaximized()
-        self.MainWindow.close() """
+        self.centralwidget.parent().close()
+
 
     def padrao(self):
         self.linha_code.setText("")
