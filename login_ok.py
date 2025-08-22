@@ -92,13 +92,11 @@ QPushButton:hover {background-color: #333;}""")
             url = self.userEndpoint + 'login.php'
             resposta = requests.post(url, json=dados)
             resposta_json = json.loads(resposta.text)
-            dados_rec = resposta_json['data']['dados_rec']
-            token = resposta_json['data']['dados_rec']['Token']
-            print(token)
-            os.environ['TOKEN'] = token
             statuscode = resposta.status_code
             if resposta_json['status'] == 200:
-                
+                token = resposta_json['data']['dados_rec']['Token']
+                print(token)
+                os.environ['TOKEN'] = token
                 from testando import Ui_MainWindow
                 self.window_principal = QtWidgets.QMainWindow()
                 self.ui_principal = Ui_MainWindow()
@@ -112,7 +110,7 @@ QPushButton:hover {background-color: #333;}""")
                 reply = QMessageBox()
                 reply.setWindowTitle("Agenda de Contatos")
                 reply.setWindowIcon(QIcon('assets/images/image.png'))
-                reply.setText("Credenciais incorretas!")
+                reply.setText("Usuário ou Senha incorretos!")
                 reply.setStandardButtons(QMessageBox.StandardButton.Yes)
                 x = reply.exec()
                 

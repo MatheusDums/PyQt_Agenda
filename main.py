@@ -5,7 +5,6 @@ import configparser
 import os
 from PyQt6.QtGui import QIcon
 from winotify import Notification
-
 app = QtWidgets.QApplication(sys.argv)
 if not(os.path.exists("config.ini")):
     notificacao = Notification(app_id="Agenda de Contatos", title="Notificação de erro",

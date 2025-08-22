@@ -9,3 +9,7 @@ Python==3.13.5
 
 Para instalar as bibliotecas usadas:
 pip install -r requirements.txt
+
+
+22-08: Correção de layout e de login
+- Login estava dando erro quando dados digitados errados, foi consertado
