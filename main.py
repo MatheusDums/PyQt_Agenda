@@ -7,7 +7,7 @@ from PyQt6.QtGui import QIcon
 from winotify import Notification
 
 app = QtWidgets.QApplication(sys.argv)
-if not(os.path.exists("configi.ini")):
+if not(os.path.exists("config.ini")):
     notificacao = Notification(app_id="Agenda de Contatos", title="Notificação de erro",
                             msg="Agenda de contatos não contém o arquivo 'Config.ini', entre em contato com a TI.",
                             duration="short", icon="C://xampp/htdocs/pyqt_agenda/assets/images/icone.ico")
