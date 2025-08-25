@@ -24,7 +24,7 @@ class Ui_MainWindow(object):
         self.layout.setSpacing(15)
         self.title_label = QtWidgets.QLabel("Agenda de Contatos")
         self.title_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.title_label.setStyleSheet("font: 30pt 'Dubai';")
+        self.title_label.setStyleSheet("font: 30px 'Dubai';")
         self.layout.addWidget(self.title_label)
         self.form_layout = QtWidgets.QGridLayout()
         self.form_layout.setHorizontalSpacing(20)
@@ -322,8 +322,16 @@ class Ui_MainWindow(object):
             self.padrao()
     
     def highlight_selected_row(self):
-        self.tabela.setStyleSheet("QTableWidget::item:selected {font-size:15px; background-color: lightblue; color: black; }")
-
+        self.tabela.setStyleSheet("""
+    QTableWidget::item { 
+        font-size:15px; 
+        padding: 6px;}
+    QTableWidget::item:selected { 
+        background-color: lightblue; 
+        color: black; 
+        font-size:15px;
+        padding: 6px;}
+    """)
     
     def excluir(self) :
         url_delete = self.userEndpoint + 'delete.php'
