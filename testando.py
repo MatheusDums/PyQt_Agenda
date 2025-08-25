@@ -24,7 +24,7 @@ class Ui_MainWindow(object):
         self.layout.setSpacing(15)
         self.title_label = QtWidgets.QLabel("Agenda de Contatos")
         self.title_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.title_label.setStyleSheet("font: 30px 'Dubai';")
+        self.title_label.setStyleSheet("font: 40px 'Dubai';")
         self.layout.addWidget(self.title_label)
         self.form_layout = QtWidgets.QGridLayout()
         self.form_layout.setHorizontalSpacing(20)
@@ -261,6 +261,10 @@ class Ui_MainWindow(object):
             
         self.padrao()
         self.token_db()
+        fonte = QtGui.QFont()
+        fonte.setPointSize(12)
+        self.tabela.setFont(fonte)
+
 
 
     def envia(self):
@@ -386,6 +390,9 @@ class Ui_MainWindow(object):
 
         self.salvar_btn.clicked.connect(lambda: self.atualiza(item_id))
         self.salvar_btn.clicked.connect(lambda: self.execucao_segura(self.atualiza))
+        fonte = QtGui.QFont()
+        fonte.setPointSize(12)
+        self.tabela.setFont(fonte)
         
 
     def atualiza(self, item_id):
