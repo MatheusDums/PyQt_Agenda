@@ -24,21 +24,31 @@ class Ui_MainWindow(object):
         self.layout.setSpacing(15)
         self.title_label = QtWidgets.QLabel("Agenda de Contatos")
         self.title_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.title_label.setStyleSheet("font: 25pt 'Dubai';")
+        self.title_label.setStyleSheet("font: 30px 'Dubai';")
         self.layout.addWidget(self.title_label)
         self.form_layout = QtWidgets.QGridLayout()
         self.form_layout.setHorizontalSpacing(20)
         self.form_layout.setVerticalSpacing(10)
         self.label_nome = QtWidgets.QLabel("Nome")
+        self.label_nome.setFont(QtGui.QFont("Dubai", 17))
         self.linha_nome = QtWidgets.QLineEdit()
+        self.linha_nome.setFont(QtGui.QFont("Dubai", 15))
         self.label_telefone = QtWidgets.QLabel("Telefone")
+        self.label_telefone.setFont(QtGui.QFont("Dubai", 17))
         self.linha_telefone = QtWidgets.QLineEdit()
+        self.linha_telefone.setFont(QtGui.QFont("Dubai", 15))
         self.label_email = QtWidgets.QLabel("Email")
+        self.label_email.setFont(QtGui.QFont("Dubai", 17))
         self.linha_email = QtWidgets.QLineEdit()
+        self.linha_email.setFont(QtGui.QFont("Dubai", 15))
         self.label_obs = QtWidgets.QLabel("Observações")
+        self.label_obs.setFont(QtGui.QFont("Dubai", 17))
         self.linha_obs = QtWidgets.QLineEdit()
+        self.linha_obs.setFont(QtGui.QFont("Dubai", 15))
         self.label_nascimento = QtWidgets.QLabel("Data de Nascimento")
+        self.label_nascimento.setFont(QtGui.QFont("Dubai", 17))
         self.data_nasc = QtWidgets.QDateEdit()
+        self.data_nasc.setFont(QtGui.QFont("Dubai", 15))
         self.data_nasc.setCalendarPopup(True)
         self.data_nasc.setDate(QDate(2000, 1, 1))
         self.form_layout.addWidget(self.label_nome, 0, 0)
@@ -54,17 +64,17 @@ class Ui_MainWindow(object):
         self.layout.addLayout(self.form_layout)
         self.botoes_layout = QtWidgets.QHBoxLayout()
         self.salvar_btn = QtWidgets.QPushButton("Salvar")
-        self.salvar_btn.setStyleSheet("""QPushButton {background-color: #009417;font-weight: bold;padding: 10px;border: none;}""")
+        self.salvar_btn.setStyleSheet("""QPushButton {font-size:17px;background-color: #009417;font-weight: bold;padding: 10px;border: none;}""")
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("assets/images/save-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.salvar_btn.setIcon(icon)
         self.cancelar_btn = QtWidgets.QPushButton("Cancelar")
-        self.cancelar_btn.setStyleSheet("""QPushButton {background-color: #ff7f05;color: black;font-weight: bold;padding: 10px;border: none;}""")
+        self.cancelar_btn.setStyleSheet("""QPushButton {font-size:17px;background-color: #ff7f05;color: black;font-weight: bold;padding: 10px;border: none;}""")
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap("assets/images/cancel-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.cancelar_btn.setIcon(icon1)
         self.excluir_btn = QtWidgets.QPushButton("Excluir")
-        self.excluir_btn.setStyleSheet("""QPushButton {background-color: #ff0000;font-weight: bold;padding: 10px;border: none;}""")
+        self.excluir_btn.setStyleSheet("""QPushButton {font-size:17px;background-color: #ff0000;font-weight: bold;padding: 10px;border: none;}""")
         """ self.excluir_btn.setFixedWidth(120) """
         icon3 = QtGui.QIcon()
         icon3.addPixmap(QtGui.QPixmap("assets/images/delete-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
@@ -78,6 +88,7 @@ class Ui_MainWindow(object):
         self.tabela.setColumnCount(6)
         self.tabela.setHorizontalHeaderLabels(["Nome", "ID", "Telefone", "Email", "Nascimento", "Observações"])
         self.tabela.setColumnHidden(1, True)
+        self.tabela.setStyleSheet("""font-size:15px;""")
         self.tabela.setSelectionBehavior(QtWidgets.QTableWidget.SelectionBehavior.SelectRows)
         self.tabela.setEditTriggers(QtWidgets.QTableWidget.EditTrigger.NoEditTriggers)
         self.tabela.horizontalHeader().setStretchLastSection(True)
@@ -86,14 +97,14 @@ class Ui_MainWindow(object):
         self.side_button_layout = QtWidgets.QVBoxLayout()
         self.side_button_layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
         self.editar_btn = QtWidgets.QPushButton("Editar")
-        self.editar_btn.setStyleSheet("""QPushButton {background-color: #0000ff;font-weight: bold;padding: 10px;border: none;}""")
+        self.editar_btn.setStyleSheet("""QPushButton {font-size:15px;background-color: #0000ff;font-weight: bold;padding: 10px;border: none;}""")
         self.editar_btn.setFixedWidth(120)
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap("assets/images/edit-3-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.editar_btn.setIcon(icon2)
         
         self.print_btn = QtWidgets.QPushButton("")
-        self.print_btn.setStyleSheet("""QPushButton {background-color: #d3d3d3;font-weight: bold;padding: 10px;border: none;}""")
+        self.print_btn.setStyleSheet("""QPushButton {icon-size: 30px;font-size:15px;background-color: #d3d3d3;font-weight: bold;padding: 10px;border: none;}""")
         self.print_btn.setFixedWidth(70)
         icon5 = QtGui.QIcon()
         icon5.addPixmap(QtGui.QPixmap("assets/images/print-svgrepo-com"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
@@ -104,7 +115,7 @@ class Ui_MainWindow(object):
         
         
         self.sair_btn_2 = QtWidgets.QPushButton("")
-        self.sair_btn_2.setStyleSheet("""QPushButton {background-color: #d3d3d3;font-weight: bold;padding: 10px;border: none;}""")
+        self.sair_btn_2.setStyleSheet("""QPushButton {icon-size: 30px;background-color: #d3d3d3;font-weight: bold;padding: 10px;border: none;}""")
         self.sair_btn_2.setFixedWidth(70)
         icon4 = QtGui.QIcon()
         icon4.addPixmap(QtGui.QPixmap("assets/images/exit-to-app-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
@@ -311,8 +322,16 @@ class Ui_MainWindow(object):
             self.padrao()
     
     def highlight_selected_row(self):
-        self.tabela.setStyleSheet("QTableWidget::item:selected { background-color: lightblue; color: black; }")
-
+        self.tabela.setStyleSheet("""
+    QTableWidget::item { 
+        font-size:15px; 
+        padding: 6px;}
+    QTableWidget::item:selected { 
+        background-color: lightblue; 
+        color: black; 
+        font-size:15px;
+        padding: 6px;}
+    """)
     
     def excluir(self) :
         url_delete = self.userEndpoint + 'delete.php'
