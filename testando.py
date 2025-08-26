@@ -93,7 +93,7 @@ class Ui_MainWindow(object):
         self.tabela.setColumnCount(6)
         self.tabela.setHorizontalHeaderLabels(["Nome", "ID", "Telefone", "Email", "Nascimento", "Observações"])
         self.tabela.setColumnHidden(1, True)
-        self.tabela.setStyleSheet("""font-size:15px;""")
+        self.tabela.setStyleSheet("""font-size:12px;""")
         self.tabela.setSelectionBehavior(QtWidgets.QTableWidget.SelectionBehavior.SelectRows)
         self.tabela.setEditTriggers(QtWidgets.QTableWidget.EditTrigger.NoEditTriggers)
         self.tabela.horizontalHeader().setStretchLastSection(True)
@@ -267,7 +267,7 @@ class Ui_MainWindow(object):
         self.padrao()
         self.token_db()
         fonte = QtGui.QFont()
-        fonte.setPointSize(12)
+        fonte.setPointSize(10)
         self.tabela.setFont(fonte)
 
 
@@ -396,7 +396,7 @@ class Ui_MainWindow(object):
         self.salvar_btn.clicked.connect(lambda: self.atualiza(item_id))
         self.salvar_btn.clicked.connect(lambda: self.execucao_segura(self.atualiza))
         fonte = QtGui.QFont()
-        fonte.setPointSize(12)
+        fonte.setPointSize(10)
         self.tabela.setFont(fonte)
         
 
