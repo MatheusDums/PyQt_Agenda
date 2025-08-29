@@ -8,28 +8,28 @@
         ^CF0,25
 
         ^FO40,52^BXN,7,200
-        ^FD%telefone%^FS
+        ^FD%peso%^FS
 
         ^FO370,52^BXN,7,200
-        ^FD%telefone%^FS
+        ^FD%peso%^FS
 
         ^FO40,165^BXN,7,200
-        ^FD%telefone%^FS
+        ^FD%peso%^FS
 
         ^FO370,165^BXN,7, 200
-        ^FD%telefone%^FS
+        ^FD%peso%^FS
 
         ^FO40,278^BXN,7,200
-        ^FD%telefone%^FS
+        ^FD%peso%^FS
 
         ^FO370,278^BXN,7, 200
-        ^FD%telefone%^FS
+        ^FD%peso%^FS
 
         ^FO165,127^BXN,13,200
-        ^FD%telefone%^FS
+        ^FD%peso%^FS
 
         ^CF0,45
-        ^FO135,385^FD%telefone%^FS
+        ^FO195,385^FD%peso% Kg^FS
 
         ^FO40,430^GB420,33,1^FS
         ^CF0,25

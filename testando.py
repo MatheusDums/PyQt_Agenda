@@ -7,7 +7,6 @@ import os
 import requests
 from datetime import datetime
 import configparser
-from configparser import ConfigParser
 import time
 import json
 
@@ -31,29 +30,29 @@ class Ui_MainWindow(object):
         self.form_layout.setVerticalSpacing(10)
         self.label_nome = QtWidgets.QLabel("Nome")
 
-        self.label_nome.setFont(QtGui.QFont("Dubai", 17))
+        self.label_nome.setFont(QtGui.QFont("Dubai", 15))
         self.linha_nome = QtWidgets.QLineEdit()
-        self.linha_nome.setFont(QtGui.QFont("Dubai", 15))        
+        self.linha_nome.setFont(QtGui.QFont("Dubai", 14))        
         self.linha_nome.setPlaceholderText("Digite o nome")
         self.label_telefone = QtWidgets.QLabel("Telefone")
-        self.label_telefone.setFont(QtGui.QFont("Dubai", 17))
+        self.label_telefone.setFont(QtGui.QFont("Dubai", 15))
         self.linha_telefone = QtWidgets.QLineEdit()
-        self.linha_telefone.setFont(QtGui.QFont("Dubai", 15))
+        self.linha_telefone.setFont(QtGui.QFont("Dubai", 14))
         self.linha_telefone.setPlaceholderText("Digite o telefone")
         self.label_email = QtWidgets.QLabel("Email")
-        self.label_email.setFont(QtGui.QFont("Dubai", 17))
+        self.label_email.setFont(QtGui.QFont("Dubai", 15))
         self.linha_email = QtWidgets.QLineEdit()
-        self.linha_email.setFont(QtGui.QFont("Dubai", 15))
+        self.linha_email.setFont(QtGui.QFont("Dubai", 14))
         self.linha_email.setPlaceholderText("Digite o email")
         self.label_obs = QtWidgets.QLabel("Observações")
-        self.label_obs.setFont(QtGui.QFont("Dubai", 17))
+        self.label_obs.setFont(QtGui.QFont("Dubai", 15))
         self.linha_obs = QtWidgets.QLineEdit()
-        self.linha_obs.setFont(QtGui.QFont("Dubai", 15))
+        self.linha_obs.setFont(QtGui.QFont("Dubai", 14))
         self.linha_obs.setPlaceholderText("Digite as observações")
         self.label_nascimento = QtWidgets.QLabel("Data de Nascimento")
-        self.label_nascimento.setFont(QtGui.QFont("Dubai", 17))
+        self.label_nascimento.setFont(QtGui.QFont("Dubai", 15))
         self.data_nasc = QtWidgets.QDateEdit()
-        self.data_nasc.setFont(QtGui.QFont("Dubai", 15))
+        self.data_nasc.setFont(QtGui.QFont("Dubai", 14))
         self.data_nasc.setCalendarPopup(True)
         self.data_nasc.setDate(QDate(2000, 1, 1))
         self.form_layout.addWidget(self.label_nome, 0, 0)
@@ -69,17 +68,17 @@ class Ui_MainWindow(object):
         self.layout.addLayout(self.form_layout)
         self.botoes_layout = QtWidgets.QHBoxLayout()
         self.salvar_btn = QtWidgets.QPushButton("Salvar")
-        self.salvar_btn.setStyleSheet("""QPushButton {font-size:17px;background-color: #009417;font-weight: bold;padding: 10px;border: none;}""")
+        self.salvar_btn.setStyleSheet("""QPushButton {font-size:15px;background-color: #009417;font-weight: bold;padding: 10px;border: none;}""")
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("assets/images/save-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.salvar_btn.setIcon(icon)
         self.cancelar_btn = QtWidgets.QPushButton("Cancelar")
-        self.cancelar_btn.setStyleSheet("""QPushButton {font-size:17px;background-color: #ff7f05;color: black;font-weight: bold;padding: 10px;border: none;}""")
+        self.cancelar_btn.setStyleSheet("""QPushButton {font-size:15px;background-color: #ff7f05;color: black;font-weight: bold;padding: 10px;border: none;}""")
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap("assets/images/cancel-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.cancelar_btn.setIcon(icon1)
         self.excluir_btn = QtWidgets.QPushButton("Excluir")
-        self.excluir_btn.setStyleSheet("""QPushButton {font-size:17px;background-color: #ff0000;font-weight: bold;padding: 10px;border: none;}""")
+        self.excluir_btn.setStyleSheet("""QPushButton {font-size:15px;background-color: #ff0000;font-weight: bold;padding: 10px;border: none;}""")
         """ self.excluir_btn.setFixedWidth(120) """
         icon3 = QtGui.QIcon()
         icon3.addPixmap(QtGui.QPixmap("assets/images/delete-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
@@ -93,7 +92,7 @@ class Ui_MainWindow(object):
         self.tabela.setColumnCount(6)
         self.tabela.setHorizontalHeaderLabels(["Nome", "ID", "Telefone", "Email", "Nascimento", "Observações"])
         self.tabela.setColumnHidden(1, True)
-        self.tabela.setStyleSheet("""font-size:15px;""")
+        self.tabela.setStyleSheet("""font-size:12px;""")
         self.tabela.setSelectionBehavior(QtWidgets.QTableWidget.SelectionBehavior.SelectRows)
         self.tabela.setEditTriggers(QtWidgets.QTableWidget.EditTrigger.NoEditTriggers)
         self.tabela.horizontalHeader().setStretchLastSection(True)
@@ -267,7 +266,7 @@ class Ui_MainWindow(object):
         self.padrao()
         self.token_db()
         fonte = QtGui.QFont()
-        fonte.setPointSize(12)
+        fonte.setPointSize(9)
         self.tabela.setFont(fonte)
 
 
@@ -396,7 +395,7 @@ class Ui_MainWindow(object):
         self.salvar_btn.clicked.connect(lambda: self.atualiza(item_id))
         self.salvar_btn.clicked.connect(lambda: self.execucao_segura(self.atualiza))
         fonte = QtGui.QFont()
-        fonte.setPointSize(12)
+        fonte.setPointSize(9)
         self.tabela.setFont(fonte)
         
 
@@ -429,7 +428,7 @@ class Ui_MainWindow(object):
         self.padrao()
 
     def imprimir(self):
-        from imprimir import Ui_MainWindow as ImprimirWindow
+        from imprimirPeso import Ui_MainWindow as ImprimirWindow
         self.window_imprimir = QtWidgets.QMainWindow()
         self.ui_imprimir = ImprimirWindow()
         self.ui_imprimir.setupUi(self.window_imprimir)

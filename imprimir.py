@@ -10,7 +10,6 @@ import requests
 import shutil
 from datetime import datetime
 import configparser
-from configparser import ConfigParser
 import time
 import json
 
@@ -224,10 +223,12 @@ class Ui_MainWindow(object):
             
             # Percorra cada linha e substitua os marcadores pelas variáveis
             for i in range(len(linhas)):
+                nascimento = dados[0]['pyt_nascimento']
                 linhas[i] = linhas[i].replace('%nome%', dados[0]['pyt_nome'])
                 linhas[i] = linhas[i].replace('%telefone%', dados[0]['pyt_telefone'])
                 linhas[i] = linhas[i].replace('%email%', dados[0]['pyt_email'])
-                linhas[i] = linhas[i].replace('%nasc%', dados[0]['pyt_nascimento'])
+                nascimento_ok = datetime.strptime(nascimento, "%Y-%m-%d").strftime("%d/%m/%Y")
+                linhas[i] = linhas[i].replace('%nasc%', nascimento_ok)
                 linhas[i] = linhas[i].replace('%observacoes%', dados[0]['pyt_observacoes'])
 
             # Concatenar as linhas em uma única string
