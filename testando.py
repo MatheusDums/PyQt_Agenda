@@ -266,7 +266,11 @@ class Ui_MainWindow(object):
         self.padrao()
         self.token_db()
         fonte = QtGui.QFont()
+<<<<<<< HEAD
         fonte.setPointSize(9)
+=======
+        fonte.setPointSize(10)
+>>>>>>> 54e5c1afdfb4237cd6dac85af36abc7a0ed9bc65
         self.tabela.setFont(fonte)
 
 
@@ -395,7 +399,11 @@ class Ui_MainWindow(object):
         self.salvar_btn.clicked.connect(lambda: self.atualiza(item_id))
         self.salvar_btn.clicked.connect(lambda: self.execucao_segura(self.atualiza))
         fonte = QtGui.QFont()
+<<<<<<< HEAD
         fonte.setPointSize(9)
+=======
+        fonte.setPointSize(10)
+>>>>>>> 54e5c1afdfb4237cd6dac85af36abc7a0ed9bc65
         self.tabela.setFont(fonte)
         
 
