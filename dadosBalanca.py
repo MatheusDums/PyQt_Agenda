@@ -1,7 +1,40 @@
 import serial
 import time
+
+try:
+    ser = serial.Serial('COM3', 9600, timeout=1)
+    print(f"Conectado em: {ser.name}")
+    dataRead = ser.read(10)
+    
+    peso_str = dataRead.strip()
+
+    print(f"Peso atual: {peso_str} kg")
+    
+except serial.SerialException as e:
+            print(f"Erro ao abrir a porta serial: {e}")
+except Exception as e:
+            print(f"Ocorreu um erro: {e}")
+
+
+
+
+""" ser = serial.Serial('COM3', baudrate=9600, timeout=1) 
+
+try:
+    print(f"Conectado a porta {ser.portstr} em baud {ser.baudrate}")
+    
+    while True: 
+        line = ser.readline().decode('utf-8').strip()
+        if(line):
+            print(f"{line} recebido")
+    
+except serial.SerialException as e:
+            print(f"Erro ao abrir a porta serial: {e}")
+except Exception as e:
+            print(f"Ocorreu um erro: {e}") """
+
  
-ser = serial.Serial(
+""" ser = serial.Serial(
     port='COM3',
     baudrate=9600,
     bytesize=serial.EIGHTBITS,
@@ -23,7 +56,7 @@ try:
 except KeyboardInterrupt:
     print("Saindo...")
 finally:
-    ser.close()
+    ser.close() """
 
 
 
@@ -57,9 +90,6 @@ with serial.Serial(port, baudrate, bytesize, parity, stopbits) as ser:
         time.sleep(1) """
 
 
-
-
-
 """ try:
     ser = serial.Serial('COM3', 9600)
     print(f"Conectado em: {ser.name}")
@@ -70,16 +100,6 @@ except serial.SerialException as e:
             print(f"Erro ao abrir a porta serial: {e}")
 except Exception as e:
             print(f"Ocorreu um erro: {e}") """
-
-
-
-
-
-
-
-
-
-
 
 """ try:
     ser = serial.Serial('COM3', 9600, timeout=1)
@@ -96,6 +116,8 @@ except serial.SerialException as e:
             print(f"Erro ao abrir a porta serial: {e}")
 except Exception as e:
             print(f"Ocorreu um erro: {e}") """
+            
+            
 
 """ porta_serial = 'COM3'
 baud_rate = 9600
@@ -124,11 +146,8 @@ finally:
     if 'ser' in locals() and ser.isOpen():
         ser.close()
         print("Porta serial fechada.") """
-
-
-
-
-
+        
+        
 
 """ try:
     ser = serial.Serial('COM3', 9600, timeout=1)
