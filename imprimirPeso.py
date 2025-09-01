@@ -247,8 +247,7 @@ class Ui_MainWindow(object):
         try:
             print("Iniciando leitura da balança. Pressione Ctrl+C para parar.")
             peso = ""
-            contagem = 0
-            while contagem < 1:
+            while True:
                 leitura = serial_conn.read_until(b'\n').strip() # Lê até encontrar uma nova linha
                 #print(f"Dados brutos recebidos: {leitura}")  # Exibe os dados brutos recebidos
                     
@@ -262,7 +261,6 @@ class Ui_MainWindow(object):
                     print(f"Peso lido: {peso}")
                 else:
                     print("Peso inválido ou não detectado.")
-                contagem = contagem + 1
                 return peso
                 
         except KeyboardInterrupt:
@@ -274,10 +272,12 @@ class Ui_MainWindow(object):
                 serial_conn.close()
                 print("Conexão serial fechada.")      
         #fim da parte de peso
+    os.environ["PESO"] = testar_balanca()
     
+    peso_ok = os.getenv("PESO")
+    print(f"Peso Atual: {peso_ok}")
     
-    
-    def etiquetas(self):
+    def etiquetas(self):          
         print(f"Peso atual: {self.peso_atual}")
         
         codigo = self.linha_code.toPlainText()
