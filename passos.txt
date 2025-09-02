@@ -1,0 +1,5 @@
+Pq o while trava a aplicação? 
+
+1. fazer o while funcionar sem travar e ir printando na linha de peso.
+2. ao clicar no botão de captar, pegar o peso e imprimir ao clicar no botão de imprimir, gerar a etiqueta.
+3. ao gerar a etiqueta, voltar a rodar o while.

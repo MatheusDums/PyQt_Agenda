@@ -80,6 +80,13 @@ class Ui_MainWindow(object):
         self.cancelar_btn.setStyleSheet("background-color: #ff7f05; color: black; font-size: 18pt; border-radius: 0px;")
         self.cancelar_btn.setMinimumHeight(40)
         self.layout_botoes.addWidget(self.cancelar_btn)
+        self.captar_btn = QtWidgets.QPushButton(parent=self.frame_principal)
+        self.captar_btn.setIcon(QIcon("./assets/images/balanca.svg"))
+        self.captar_btn.setText("  Captar Peso")
+        self.captar_btn.setIconSize(QSize(26, 26))
+        self.captar_btn.setStyleSheet("background-color: #ADD8E6; color: black; font-size: 18pt; border-radius: 0px;")
+        self.captar_btn.setMinimumHeight(40)
+        self.layout_botoes.addWidget(self.captar_btn)
         self.imprimir_btn = QtWidgets.QPushButton(parent=self.frame_principal)
         self.imprimir_btn.setIcon(QIcon("./assets/images/print-svgrepo-com.svg"))
         self.imprimir_btn.setText("  Imprimir")
@@ -169,6 +176,7 @@ class Ui_MainWindow(object):
         self.imprimir_btn.clicked.connect(lambda: self.execucao_segura(self.etiquetas))
         self.voltar_btn.clicked.connect(lambda: self.execucao_segura(self.voltar))
         self.cancelar_btn.clicked.connect(lambda: self.execucao_segura(self.padrao))
+        self.captar_btn.clicked.connect(lambda: self.execucao_segura(self.captarPeso))
         
     config = configparser.ConfigParser()
     config.read("config.ini")
@@ -183,102 +191,112 @@ class Ui_MainWindow(object):
     # Executa o comando no CMD
     subprocess.run('cd \\', shell=True)
     subprocess.run('NET USE LPT1 /DELETE', shell=True)
-    subprocess.run("NET USE LPT1 \\\\127.0.0.1\\" + comp_impzebra + " /PERSISTENT:YES", shell=True)   
-    
-        #parte de peso
-    def testar_balanca():
+    subprocess.run("NET USE LPT1 \\\\127.0.0.1\\" + comp_impzebra + " /PERSISTENT:YES", shell=True)  
+    def captarPeso(self):
+            #parte de peso
+           
+            def configurar_porta_serial(porta, vltransmissao, bits_dados, paridade, bits_parada):
+                    try:
+                        serial_conn = serial.Serial(
+                            port=porta,
+                            baudrate=vltransmissao,
+                            bytesize=bits_dados,
+                            parity=serial.PARITY_NONE if not paridade else getattr(serial, f"PARITY_{paridade.upper()}", serial.PARITY_NONE),
+                            stopbits=bits_parada,
+                            timeout=1
+                        )
+                        print(f"Porta {porta} configurada com sucesso.")
+                        return serial_conn
+                    except serial.SerialException as e:
+                        print(f"Erro ao configurar a porta serial: {e}")
+                        return None
+
+            def extrair_peso(str_receive):
+                    """
+                    Extrai o peso do dado recebido da balança no formato esperado.
+                    Exemplo: b'\x02;0 000673000000' retorna "673".
+                    """
+                    #print(f"Recebido: {str_receive}")
+                    if not str_receive:
+                        return None
+                    try:
+                        texto = str_receive.decode("utf-8", errors="ignore").strip()
+                        match = re.search(r'(\d{2})(\d{3})', texto)
+                        """ print(f"Texto: ", texto)
+                        print(f"match: ", match) """
+                        if match:
+                            parte_inteira = match.group(1).lstrip("0") or "0"
+                            parte_decimal = match.group(2)
+                            # peso_formatado = f"{int(parte_inteira)}.{parte_decimal}".replace(".", ",")
+                            peso_formatado = f"{parte_inteira}.{parte_decimal}"
+                            #print(f"formatado: ", peso_formatado)
+                            return peso_formatado
+                    except Exception as e:
+                        print(f"Erro ao extrair peso: {e}")
+                    return None
+                
+            def testar_balanca(): 
+                """
+                Testa a leitura da balança, exibe os dados no console e salva em um arquivo .txt.
+                """
+                # Configurações da balança (substitua pelos valores reais)
+                porta = "COM3"  # Substitua pela porta correta
+                vltransmissao = 9600
+                bits_dados = 8
+                paridade = "N"
+                bits_parada = 1
+
+                # Configurar a porta serial
+                serial_conn = configurar_porta_serial(porta, vltransmissao, bits_dados, paridade, bits_parada)
+                if not serial_conn:
+                    return
+
+                # Define o caminho do arquivo de log na pasta raiz
+                log_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), "leituras_balanca.txt")
+                try:
+                    #print("Iniciando leitura da balança. Pressione Ctrl+C para parar.")
+                    peso = ""
+                    while True:
+                        leitura = serial_conn.read_until(b'\n').strip() # Lê até encontrar uma nova linha
+                        #print(f"Dados brutos recebidos: {leitura}")  # Exibe os dados brutos recebidos
+                            
+                        # Salva os dados brutos no arquivo de log
+                        with open(log_file, "a", encoding="utf-8") as f:
+                            f.write(f"{leitura.decode('utf-8', errors='ignore').strip()}\n")
+                        
+                        peso = extrair_peso(leitura)
+                        #print(peso)
+                        if peso:
+                            print(f"Peso lido: {peso}")
+                            """ os.environ["PESO"] = peso """
+                        else:
+                            print("Peso inválido ou não detectado.")
+                        self.linha_peso.setText(f"{peso} kg")
+                        os.environ["PESO"] = peso
+                        
+                        
+                except KeyboardInterrupt:
+                    print("Leitura interrompida pelo usuário.")
+                except Exception as e:
+                    print(f"Erro durante a leitura: {e}")
+                finally:
+                    if serial_conn and serial_conn.is_open:
+                        serial_conn.close()
+                        #print("Conexão serial fechada.")      
+                        
+                #fim da parte de peso
+            print(testar_balanca())
             
-        def configurar_porta_serial(porta, vltransmissao, bits_dados, paridade, bits_parada):
-            try:
-                serial_conn = serial.Serial(
-                    port=porta,
-                    baudrate=vltransmissao,
-                    bytesize=bits_dados,
-                    parity=serial.PARITY_NONE if not paridade else getattr(serial, f"PARITY_{paridade.upper()}", serial.PARITY_NONE),
-                    stopbits=bits_parada,
-                    timeout=1
-                )
-                print(f"Porta {porta} configurada com sucesso.")
-                return serial_conn
-            except serial.SerialException as e:
-                print(f"Erro ao configurar a porta serial: {e}")
-                return None
-
-        def extrair_peso(str_receive):
-            """
-            Extrai o peso do dado recebido da balança no formato esperado.
-            Exemplo: b'\x02;0 000673000000' retorna "673".
-            """
-            #print(f"Recebido: {str_receive}")
-            if not str_receive:
-                return None
-            try:
-                texto = str_receive.decode("utf-8", errors="ignore").strip()
-                match = re.search(r'(\d{2})(\d{3})', texto)
-                """ print(f"Texto: ", texto)
-                print(f"match: ", match) """
-                if match:
-                    parte_inteira = match.group(1).lstrip("0") or "0"
-                    parte_decimal = match.group(2)
-                    # peso_formatado = f"{int(parte_inteira)}.{parte_decimal}".replace(".", ",")
-                    peso_formatado = f"{parte_inteira}.{parte_decimal}"
-                    #print(f"formatado: ", peso_formatado)
-                    return peso_formatado
-            except Exception as e:
-                print(f"Erro ao extrair peso: {e}")
-            return None
-        """
-        Testa a leitura da balança, exibe os dados no console e salva em um arquivo .txt.
-        """
-        # Configurações da balança (substitua pelos valores reais)
-        porta = "COM3"  # Substitua pela porta correta
-        vltransmissao = 9600
-        bits_dados = 8
-        paridade = "N"
-        bits_parada = 1
-
-        # Configurar a porta serial
-        serial_conn = configurar_porta_serial(porta, vltransmissao, bits_dados, paridade, bits_parada)
-        if not serial_conn:
-            return
-
-        # Define o caminho do arquivo de log na pasta raiz
-        log_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), "leituras_balanca.txt")
-        try:
-            print("Iniciando leitura da balança. Pressione Ctrl+C para parar.")
-            peso = ""
-            while True:
-                leitura = serial_conn.read_until(b'\n').strip() # Lê até encontrar uma nova linha
-                #print(f"Dados brutos recebidos: {leitura}")  # Exibe os dados brutos recebidos
-                    
-                # Salva os dados brutos no arquivo de log
-                with open(log_file, "a", encoding="utf-8") as f:
-                    f.write(f"{leitura.decode('utf-8', errors='ignore').strip()}\n")
-                
-                peso = extrair_peso(leitura)
-                #print(peso)
-                if peso:
-                    print(f"Peso lido: {peso}")
-                else:
-                    print("Peso inválido ou não detectado.")
-                return peso
-                
-        except KeyboardInterrupt:
-            print("Leitura interrompida pelo usuário.")
-        except Exception as e:
-            print(f"Erro durante a leitura: {e}")
-        finally:
-            if serial_conn and serial_conn.is_open:
-                serial_conn.close()
-                print("Conexão serial fechada.")      
-        #fim da parte de peso
-    os.environ["PESO"] = testar_balanca()
+        
+        
     
-    peso_ok = os.getenv("PESO")
-    print(f"Peso Atual: {peso_ok}")
-    
-    def etiquetas(self):          
-        print(f"Peso atual: {self.peso_atual}")
+    def etiquetas(self):
+
+        self.captarPeso()
+        
+        peso = os.getenv("PESO")
+        print(peso)
+        
         
         codigo = self.linha_code.toPlainText()
         
@@ -305,7 +323,6 @@ class Ui_MainWindow(object):
         """ parte de quantidade """
         quantidade = self.linha_qtd.toPlainText()
         
-        
         if not quantidade.isdigit() or int(quantidade) <= 0:
             reply = QMessageBox()
             reply.setWindowTitle("Agenda de Contatos")
@@ -325,6 +342,12 @@ class Ui_MainWindow(object):
         reply.button(QMessageBox.StandardButton.Yes).setText("Sim")
         reply.button(QMessageBox.StandardButton.No).setText("Não")
         x = reply.exec()
+        
+        """ clicado = False
+        while clicado == False :
+            peso
+            if self.captar_btn.click:
+                clicado = True """
         
         if x == QMessageBox.StandardButton.Yes:
             config_etq_pesagem = 'etiquetas/etiqueta.prn'
@@ -352,12 +375,14 @@ class Ui_MainWindow(object):
                 temp.write(codigo_zpl)
 
             # Enviar o arquivo para a impressora Zebra na porta LPT1
-            """ while (valorqtd > 0):
+            while (valorqtd > 0):
                 shutil.copyfile(temp_file, "LPT1")
-                valorqtd = valorqtd - 1 """
+                valorqtd = valorqtd - 1
 
             # Remover o arquivo temporário
-            """ os.remove(temp_file) """
+            os.remove(temp_file)
+            
+            
             
             nova_linha = self.tabela.rowCount()
             self.tabela.insertRow(nova_linha)
