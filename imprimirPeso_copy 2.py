@@ -1,7 +1,7 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtGui import QIcon, QColor
 from PyQt6.QtWidgets import QMessageBox, QAbstractItemView
-from PyQt6.QtCore import QDate, Qt, QSize
+from PyQt6.QtCore import QDate, Qt, QSize, QThread, pyqtSignal
 import base64
 import codecs
 import subprocess
@@ -16,6 +16,58 @@ import serial
 from serial.tools import list_ports
 import re
 import func_timeout
+
+
+class BalançaThread(QThread):
+    peso_lido = pyqtSignal(str)  # sinal para enviar o peso lido
+
+    def __init__(self, porta="COM3", vltransmissao=9600, parent=None):
+        super().__init__(parent)
+        self.porta = porta
+        self.vltransmissao = vltransmissao
+        self._running = True
+
+    def parar(self):
+        self._running = False
+
+    def run(self):
+        try:
+            serial_conn = serial.Serial(
+                port=self.porta,
+                baudrate=self.vltransmissao,
+                bytesize=8,
+                parity=serial.PARITY_NONE,
+                stopbits=1,
+                timeout=1
+            )
+        except Exception as e:
+            print("Erro ao abrir porta serial:", e)
+            return
+
+        while self._running:
+            try:
+                leitura = serial_conn.read_until(b'\n').strip()
+                if leitura:
+                    peso = self.extrair_peso(leitura)
+                    if peso:
+                        self.peso_lido.emit(peso)  # envia peso para a GUI
+                        os.environ["PESO"] = peso
+            except Exception as e:
+                print("Erro na leitura:", e)
+                break
+
+        serial_conn.close()
+
+    def extrair_peso(self, str_receive):
+        try:
+            texto = str_receive.decode("utf-8", errors="ignore").strip()
+            match = re.search(r'(\d{2})(\d{3})', texto)
+            if match:
+                parte_inteira = match.group(1).lstrip("0") or "0"
+                parte_decimal = match.group(2)
+                return f"{parte_inteira}.{parte_decimal}"
+        except:
+            return None
 
 
 class Ui_MainWindow(object):
@@ -193,109 +245,18 @@ class Ui_MainWindow(object):
     subprocess.run('NET USE LPT1 /DELETE', shell=True)
     subprocess.run("NET USE LPT1 \\\\127.0.0.1\\" + comp_impzebra + " /PERSISTENT:YES", shell=True)  
     def captarPeso(self):
-            #parte de peso
-           
-            def configurar_porta_serial(porta, vltransmissao, bits_dados, paridade, bits_parada):
-                    try:
-                        serial_conn = serial.Serial(
-                            port=porta,
-                            baudrate=vltransmissao,
-                            bytesize=bits_dados,
-                            parity=serial.PARITY_NONE if not paridade else getattr(serial, f"PARITY_{paridade.upper()}", serial.PARITY_NONE),
-                            stopbits=bits_parada,
-                            timeout=1
-                        )
-                        print(f"Porta {porta} configurada com sucesso.")
-                        return serial_conn
-                    except serial.SerialException as e:
-                        print(f"Erro ao configurar a porta serial: {e}")
-                        return None
-
-            def extrair_peso(str_receive):
-                    """
-                    Extrai o peso do dado recebido da balança no formato esperado.
-                    Exemplo: b'\x02;0 000673000000' retorna "673".
-                    """
-                    #print(f"Recebido: {str_receive}")
-                    if not str_receive:
-                        return None
-                    try:
-                        texto = str_receive.decode("utf-8", errors="ignore").strip()
-                        match = re.search(r'(\d{2})(\d{3})', texto)
-                        """ print(f"Texto: ", texto)
-                        print(f"match: ", match) """
-                        if match:
-                            parte_inteira = match.group(1).lstrip("0") or "0"
-                            parte_decimal = match.group(2)
-                            # peso_formatado = f"{int(parte_inteira)}.{parte_decimal}".replace(".", ",")
-                            peso_formatado = f"{parte_inteira}.{parte_decimal}"
-                            #print(f"formatado: ", peso_formatado)
-                            return peso_formatado
-                    except Exception as e:
-                        print(f"Erro ao extrair peso: {e}")
-                    return None
-                
-            def testar_balanca(): 
-                """
-                Testa a leitura da balança, exibe os dados no console e salva em um arquivo .txt.
-                """
-                # Configurações da balança (substitua pelos valores reais)
-                porta = "COM3"  # Substitua pela porta correta
-                vltransmissao = 9600
-                bits_dados = 8
-                paridade = "N"
-                bits_parada = 1
-
-                # Configurar a porta serial
-                serial_conn = configurar_porta_serial(porta, vltransmissao, bits_dados, paridade, bits_parada)
-                if not serial_conn:
-                    return
-
-                # Define o caminho do arquivo de log na pasta raiz
-                log_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), "leituras_balanca.txt")
-                try:
-                    #print("Iniciando leitura da balança. Pressione Ctrl+C para parar.")
-                    peso = ""
-                    while True:
-                        leitura = serial_conn.read_until(b'\n').strip() # Lê até encontrar uma nova linha
-                        #print(f"Dados brutos recebidos: {leitura}")  # Exibe os dados brutos recebidos
-                            
-                        # Salva os dados brutos no arquivo de log
-                        with open(log_file, "a", encoding="utf-8") as f:
-                            f.write(f"{leitura.decode('utf-8', errors='ignore').strip()}\n")
-                        
-                        peso = extrair_peso(leitura)
-                        #print(peso)
-                        if peso:
-                            print(f"Peso lido: {peso}")
-                            """ os.environ["PESO"] = peso """
-                        else:
-                            print("Peso inválido ou não detectado.")
-                        self.linha_peso.setText(f"{peso} kg")
-                        os.environ["PESO"] = peso
-                        
-                        
-                except KeyboardInterrupt:
-                    print("Leitura interrompida pelo usuário.")
-                except Exception as e:
-                    print(f"Erro durante a leitura: {e}")
-                finally:
-                    if serial_conn and serial_conn.is_open:
-                        serial_conn.close()
-                        #print("Conexão serial fechada.")      
-                        
-                #fim da parte de peso
-            print(testar_balanca())
+        self.thread_balanca = BalançaThread(porta="COM3", vltransmissao=9600)
+        self.thread_balanca.peso_lido.connect(self.atualizarPeso)
+        self.thread_balanca.start()
             
-        
-        
+    def atualizarPeso(self, peso):
+        self.linha_peso.setText(f"{peso} kg")
     
     def etiquetas(self):
-
-        self.captarPeso()
         
         peso = os.getenv("PESO")
-        print(peso)
+        print("Peso para imprimir:", peso)
+
         
         
         codigo = self.linha_code.toPlainText()
@@ -343,12 +304,6 @@ class Ui_MainWindow(object):
         reply.button(QMessageBox.StandardButton.No).setText("Não")
         x = reply.exec()
         
-        """ clicado = False
-        while clicado == False :
-            peso
-            if self.captar_btn.click:
-                clicado = True """
-        
         if x == QMessageBox.StandardButton.Yes:
             config_etq_pesagem = 'etiquetas/etiqueta.prn'
             with open(config_etq_pesagem, 'r', encoding='utf-8') as arquivo:
@@ -360,7 +315,7 @@ class Ui_MainWindow(object):
                 nascimento = dados[0]['pyt_nascimento']
                 linhas[i] = linhas[i].replace('%nome%', dados[0]['pyt_nome'])
                 linhas[i] = linhas[i].replace('%telefone%', dados[0]['pyt_telefone'])
-                """ linhas[i] = linhas[i].replace('%peso%', peso) """
+                linhas[i] = linhas[i].replace('%peso%', peso)
                 linhas[i] = linhas[i].replace('%email%', dados[0]['pyt_email'])
                 nascimento_ok = datetime.strptime(nascimento, "%Y-%m-%d").strftime("%d/%m/%Y")
                 linhas[i] = linhas[i].replace('%nasc%', nascimento_ok)
@@ -388,8 +343,10 @@ class Ui_MainWindow(object):
             self.tabela.insertRow(nova_linha)
             self.tabela.setItem(nova_linha, 0, QtWidgets.QTableWidgetItem(codigo) )
             self.tabela.setItem(nova_linha, 1, QtWidgets.QTableWidgetItem(quantidade))
-            """ self.tabela.setItem(nova_linha, 2, QtWidgets.QTableWidgetItem(peso)) """
-            
+            self.tabela.setItem(nova_linha, 2, QtWidgets.QTableWidgetItem(peso))
+            if not hasattr(self, "thread_balanca") or not self.thread_balanca.isRunning():
+                self.captarPeso()
+                
             self.padrao()
             self.token_db()
 
